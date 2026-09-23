@@ -65,7 +65,7 @@
                             <label class="form-label text-muted small fw-bold">Username</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" id="loginUsername" class="form-control" placeholder="admin atau user" required>
+                                <input type="text" id="loginUsername" class="form-control" placeholder="superadmin / blimbing / user" required>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -83,16 +83,19 @@
 
                     <hr class="my-4">
 
-                    <!-- Info Akun Demo -->
                     <div class="alert alert-light border small mb-0">
-                        <p class="fw-bold mb-1"><i class="bi bi-info-circle me-1"></i> Pilihan Akun Login:</p>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span><strong>Admin:</strong> <code>admin</code> / <code>admin123</code></span>
-                            <button class="btn btn-sm btn-outline-primary py-0" onclick="quickFillLogin('admin', 'admin123')">Pakai</button>
+                        <p class="fw-bold mb-1"><i class="bi bi-info-circle me-1"></i> Pilihan Akun Demo:</p>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span><strong>Super Admin:</strong> <code>superadmin</code> / <code>super123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-danger py-0" onclick="quickFillLogin('superadmin', 'super123')">Pakai</button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span><strong>Admin Blimbing:</strong> <code>blimbing</code> / <code>blimbing123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="quickFillLogin('blimbing', 'blimbing123')">Pakai</button>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><strong>Orang Biasa:</strong> <code>user</code> / <code>user123</code></span>
-                            <button class="btn btn-sm btn-outline-secondary py-0" onclick="quickFillLogin('user', 'user123')">Pakai</button>
+                            <span><strong>User Biasa:</strong> <code>user</code> / <code>user123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary py-0" onclick="quickFillLogin('user', 'user123')">Pakai</button>
                         </div>
                     </div>
                 </div>
@@ -106,7 +109,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
             <div class="container-fluid px-lg-4">
                 <a class="navbar-brand d-flex align-items-center" href="#" onclick="showView('dashboardView')">
-                    <i class="bi bi-boxes me-2 fs-4"></i><span>WH SO BLIMBING</span>
+                    <i class="bi bi-boxes me-2 fs-4"></i><span id="navBrandText">WH SO BLIMBING</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                     <span class="navbar-toggler-icon"></span>
@@ -116,20 +119,21 @@
                         <li class="nav-item"><a class="nav-link active" id="nav-dashboard" href="#" onclick="showView('dashboardView')"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" id="nav-data" href="#" onclick="showView('dataView')"><i class="bi bi-table me-1"></i> Data Master NTE</a></li>
                         <li class="nav-item"><a class="nav-link" id="nav-status" href="#" onclick="showView('statusView')"><i class="bi bi-arrow-left-right me-1"></i> Update Status</a></li>
+                        <li class="nav-item" id="navItemUsers" style="display: none;"><a class="nav-link" id="nav-users" href="#" onclick="showView('usersView')"><i class="bi bi-people me-1"></i> Manajemen User</a></li>
                     </ul>
                     <div class="d-flex align-items-center gap-2">
-                        <span class="badge bg-success-subtle text-success border border-success d-none d-sm-inline-flex align-items-center gap-1 py-2 px-2" id="badgeConnStatus" title="Terhubung via GViz API">
+                        <span class="badge bg-success-subtle text-success border border-success d-none d-sm-inline-flex align-items-center gap-1 py-2 px-2" title="Terhubung via GViz API">
                             <i class="bi bi-lightning-charge-fill"></i> Fast Mode
                         </span>
                         <div class="dropdown">
                             <button class="btn btn-light btn-sm dropdown-toggle d-flex align-items-center gap-1 shadow-sm" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-circle fs-6"></i>
                                 <span id="userBadgeName">User</span>
-                                <span id="userBadgeRole" class="badge bg-primary ms-1">Admin</span>
+                                <span id="userBadgeRole" class="badge bg-primary ms-1">Role</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow">
                                 <li><h6 class="dropdown-header">Informasi Login</h6></li>
-                                <li><span class="dropdown-item-text small" id="userInfoDetail">Role: Admin</span></li>
+                                <li><span class="dropdown-item-text small" id="userInfoDetail">Kategori: -</span></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i> Keluar (Logout)</a></li>
                             </ul>
@@ -145,7 +149,7 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
                     <div>
                         <h3 class="fw-bold text-dark mb-0">Dashboard Ringkasan NTE</h3>
-                        <p class="text-muted small mb-0">Data ditarik secara real-time dari semua Sheet</p>
+                        <p class="text-muted small mb-0">Data ditarik secara real-time dari Google Sheet</p>
                     </div>
                     <div class="d-flex gap-2">
                         <button class="btn btn-white bg-white border shadow-sm btn-sm" onclick="loadData(true)">
@@ -165,13 +169,9 @@
 
                 <!-- STATISTIK PER KATEGORI -->
                 <div class="row g-3 mb-4">
-                    <!-- TSEL -->
                     <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-danger fs-6 px-3 py-1">TSEL</span><span class="text-muted small">Telkomsel</span></div><h4 class="fw-bold mb-2" id="tselTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="tselSTB">0</strong></span><span>Modem: <strong id="tselModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="tselStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="tselIntech">0</strong></span></div></div></div>
-                    <!-- TIF -->
                     <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-primary fs-6 px-3 py-1">TIF</span><span class="text-muted small">IndiHome Fiber</span></div><h4 class="fw-bold mb-2" id="tifTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="tifSTB">0</strong></span><span>Modem: <strong id="tifModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="tifStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="tifIntech">0</strong></span></div></div></div>
-                    <!-- TELKOM -->
                     <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-secondary fs-6 px-3 py-1">TELKOM</span><span class="text-muted small">Telkom Reguler</span></div><h4 class="fw-bold mb-2" id="telkomTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="telkomSTB">0</strong></span><span>Modem: <strong id="telkomModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="telkomStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="telkomIntech">0</strong></span></div></div></div>
-                    <!-- VULA -->
                     <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-dark fs-6 px-3 py-1">VULA</span><span class="text-muted small">Vula Partner</span></div><h4 class="fw-bold mb-2" id="vulaTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="vulaSTB">0</strong></span><span>Modem: <strong id="vulaModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="vulaStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="vulaIntech">0</strong></span></div></div></div>
                 </div>
 
@@ -183,11 +183,10 @@
 
             <!-- ================= VIEW 2: DATA MASTER NTE ================= -->
             <div id="dataView" class="view-section">
-                <!-- FORM TAMBAH DATA (KHUSUS ADMIN) -->
-                <div id="adminAddCard" class="card p-4 shadow-sm mb-4 bg-white">
+                <div id="adminAddCard" class="card p-4 shadow-sm mb-4 bg-white" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="fw-bold mb-0 text-primary"><i class="bi bi-plus-circle me-2"></i>Tambah Data Baru (Admin)</h4>
-                        <span class="badge bg-primary">Akses Penuh Admin</span>
+                        <h4 class="fw-bold mb-0 text-primary"><i class="bi bi-plus-circle me-2"></i>Tambah Data Baru</h4>
+                        <span class="badge bg-primary" id="badgeAddRole">Admin Gudang</span>
                     </div>
                     <form id="formNTE">
                         <div class="row g-3">
@@ -240,7 +239,6 @@
                         </div>
                     </form>
 
-                    <!-- TOMBOL IMPORT CSV MASAL -->
                     <div class="mt-4 pt-3 border-top d-flex flex-wrap justify-content-between align-items-center gap-2">
                         <small class="text-muted"><i class="bi bi-file-earmark-arrow-up me-1"></i>Ingin input banyak data sekaligus? Upload file CSV.</small>
                         <div>
@@ -255,7 +253,7 @@
                 <div id="userRestrictionNotice" class="alert alert-info d-flex align-items-center mb-4" style="display: none;">
                     <i class="bi bi-shield-lock fs-4 me-2"></i>
                     <div>
-                        <strong>Mode User Biasa:</strong> Anda dapat melihat seluruh data, mencari, dan mengupdate status NTE. Penambahan data baru khusus Admin.
+                        <strong>Mode User Biasa (Teknisi):</strong> Anda dapat melihat seluruh data, melakukan pencarian, dan mengupdate status NTE.
                     </div>
                 </div>
 
@@ -327,7 +325,7 @@
                 </div>
             </div>
 
-            <!-- ================= VIEW 3: HALAMAN KHUSUS UPDATE STATUS ================= -->
+            <!-- ================= VIEW 3: UPDATE STATUS ================= -->
             <div id="statusView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
@@ -405,6 +403,88 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ================= VIEW 4: MANAJEMEN USER (SUPERADMIN) ================= -->
+            <div id="usersView" class="view-section">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="card p-4 shadow-sm mb-4 bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h4 class="fw-bold text-dark mb-0"><i class="bi bi-people-fill me-2 text-primary"></i>Manajemen Akun User</h4>
+                                    <p class="text-muted small mb-0">Kelola akun login dan kategori warehouse/staff terpusat</p>
+                                </div>
+                                <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">
+                                    <i class="bi bi-person-plus me-1"></i> Tambah User Baru
+                                </button>
+                            </div>
+
+                            <div class="table-responsive border rounded">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Username</th>
+                                            <th>Kategori / Warehouse</th>
+                                            <th>Role Hak Akses</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabelUsersBody">
+                                        <tr><td colspan="5" class="text-center py-3">Memuat data user...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH USER BARU -->
+    <div class="modal fade" id="modalAddUser" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Tambah User Sistem</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAddUser" onsubmit="handleSaveNewUser(event)">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Username Login</label>
+                            <input type="text" id="newUsername" class="form-control" placeholder="Contoh: wh_kayutangan" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Password</label>
+                            <input type="password" id="newPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Kategori / Unit Warehouse</label>
+                            <select id="newKategori" class="form-select" required>
+                                <option value="WH SO Blimbing">WH SO Blimbing</option>
+                                <option value="WH Kayutangan">WH Kayutangan</option>
+                                <option value="WH Suhat">WH Suhat</option>
+                                <option value="Teknisi Lapangan">Teknisi Lapangan</option>
+                                <option value="Pusat / All">Pusat / All Warehouse</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Role Hak Akses</label>
+                            <select id="newRole" class="form-select" required>
+                                <option value="user">User Biasa (Staff / Teknisi - Update Status Saja)</option>
+                                <option value="superuser">Superuser (Admin Gudang - Tambah & Update NTE)</option>
+                                <option value="superadmin">Super Admin (Akses Penuh + Manajemen User)</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Simpan Akun</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -466,9 +546,6 @@
             "VULA": "491664178"
         };
 
-        // ==========================================
-        // MASTER DATA TEKNISI RESMI (AUTO-FILL)
-        // ==========================================
         const TEKNISI_MASTER_DB = [
             { nama: "EMERALDO PRIM", nik: "16963673" },
             { nama: "KOIRUL ADI", nik: "16940763" },
@@ -508,22 +585,17 @@
         let filteredData = []; 
         let currentPage = 1;
         let pageSize = 50;
-
         let chartPieInstance = null;
         let chartBarInstance = null;
         let activeFoundItem = null;
-
-        const USERS_DB = {
-            "admin": { password: "admin123", role: "admin", name: "Administrator Gudang" },
-            "user": { password: "user123", role: "user", name: "Staff / Teknisi" }
-        };
+        let globalUsersCache = {};
 
         function checkAuth() {
             const savedUser = localStorage.getItem('nte_session_user');
             if (savedUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
-                    initAppUI();
+                    fetchUsersAndInit();
                 } catch (e) { showLogin(); }
             } else { showLogin(); }
         }
@@ -538,17 +610,47 @@
             document.getElementById('loginPassword').value = p;
         }
 
-        document.getElementById('formLogin').addEventListener('submit', function(e) {
+        async function fetchUsersAndInit() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=get_users`);
+                const res = await response.json();
+                if (res.status === 'success') {
+                    globalUsersCache = res.users;
+                }
+            } catch (err) {
+                console.error("Gagal mengambil data user:", err);
+            }
+
+            if (currentUser && globalUsersCache[currentUser.username]) {
+                currentUser.role = globalUsersCache[currentUser.username].role;
+                currentUser.kategori = globalUsersCache[currentUser.username].kategori;
+            }
+            initAppUI();
+        }
+
+        document.getElementById('formLogin').addEventListener('submit', async function(e) {
             e.preventDefault();
             const u = document.getElementById('loginUsername').value.trim();
             const p = document.getElementById('loginPassword').value.trim();
-            if (USERS_DB[u] && USERS_DB[u].password === p) {
-                currentUser = { username: u, role: USERS_DB[u].role, name: USERS_DB[u].name };
-                localStorage.setItem('nte_session_user', JSON.stringify(currentUser));
-                Swal.fire({ icon: 'success', title: 'Login Berhasil!', timer: 1000, showConfirmButton: false });
-                initAppUI();
-            } else {
-                Swal.fire({ icon: 'error', title: 'Login Gagal', text: 'Username atau password salah.' });
+
+            Swal.fire({ title: 'Memeriksa login...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=get_users`);
+                const res = await response.json();
+                Swal.close();
+
+                if (res.status === 'success' && res.users[u] && res.users[u].password === p) {
+                    currentUser = { username: u, role: res.users[u].role, kategori: res.users[u].kategori };
+                    localStorage.setItem('nte_session_user', JSON.stringify(currentUser));
+                    globalUsersCache = res.users;
+                    Swal.fire({ icon: 'success', title: 'Login Berhasil!', timer: 1000, showConfirmButton: false });
+                    initAppUI();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Login Gagal', text: 'Username atau password salah.' });
+                }
+            } catch(err) {
+                Swal.fire({ icon: 'error', title: 'Koneksi Gagal', text: 'Tidak dapat terhubung ke server.' });
             }
         });
 
@@ -564,19 +666,32 @@
 
             document.getElementById('userBadgeName').innerText = currentUser.username;
             document.getElementById('userBadgeRole').innerText = currentUser.role.toUpperCase();
-            document.getElementById('userBadgeRole').className = currentUser.role === 'admin' ? 'badge bg-danger ms-1' : 'badge bg-secondary ms-1';
-            document.getElementById('userInfoDetail').innerText = `${currentUser.name} (${currentUser.role})`;
-
-            if (currentUser.role === 'admin') {
+            document.getElementById('navBrandText').innerText = currentUser.kategori ? currentUser.kategori.toUpperCase() : 'WH SO BLIMBING';
+            
+            if (currentUser.role === 'superadmin') {
+                document.getElementById('userBadgeRole').className = 'badge bg-danger ms-1';
+                document.getElementById('navItemUsers').style.display = 'block';
                 document.getElementById('adminAddCard').style.display = 'block';
+                document.getElementById('badgeAddRole').innerText = 'Super Admin';
+                document.getElementById('userRestrictionNotice').style.display = 'none';
+            } else if (currentUser.role === 'superuser') {
+                document.getElementById('userBadgeRole').className = 'badge bg-primary ms-1';
+                document.getElementById('navItemUsers').style.display = 'none';
+                document.getElementById('adminAddCard').style.display = 'block';
+                document.getElementById('badgeAddRole').innerText = currentUser.kategori;
                 document.getElementById('userRestrictionNotice').style.display = 'none';
             } else {
+                document.getElementById('userBadgeRole').className = 'badge bg-secondary ms-1';
+                document.getElementById('navItemUsers').style.display = 'none';
                 document.getElementById('adminAddCard').style.display = 'none';
                 document.getElementById('userRestrictionNotice').style.display = 'flex';
             }
 
+            document.getElementById('userInfoDetail').innerText = `Kategori: ${currentUser.kategori || '-'}`;
+
             showView('dashboardView');
             loadData();
+            renderUsersTable();
         }
 
         function showView(viewId) {
@@ -590,14 +705,14 @@
                 document.getElementById('nav-status').classList.add('active');
                 setTimeout(() => document.getElementById('inputCariSN').focus(), 200);
             }
+            else if (viewId === 'usersView') {
+                document.getElementById('nav-users').classList.add('active');
+                renderUsersTable();
+            }
         }
 
-        // ==========================================
-        // GVIZ API READER & PARSER
-        // ==========================================
         function parseGVizTable(sheetName, jsonData) {
             if(!jsonData || !jsonData.table || !jsonData.table.rows) return [];
-            
             const rows = jsonData.table.rows;
             const headers = jsonData.table.cols.map(c => c && c.label ? c.label.toUpperCase().trim() : '');
             
@@ -614,13 +729,11 @@
             rows.forEach(row => {
                 const c = row.c;
                 if (!c) return;
-
                 const getVal = (idx) => (idx !== -1 && c[idx] && c[idx].v !== null) ? String(c[idx].v).trim() : '';
                 const getFormattedVal = (idx) => (idx !== -1 && c[idx] && c[idx].f !== null) ? String(c[idx].f).trim() : getVal(idx);
 
                 const sn = getVal(idxSN);
                 const barang = getVal(idxBarang);
-                
                 if (!sn && !barang) return;
 
                 result.push({
@@ -643,21 +756,18 @@
             const btnRefresh = document.getElementById('btnRefresh');
 
             if(btnRefresh) btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Loading...';
-            tbody.innerHTML = '<tr><td colspan="11" class="text-center py-4"><div class="spinner-border text-primary me-2"></div> Memuat data ribuan baris...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="11" class="text-center py-4"><div class="spinner-border text-primary me-2"></div> Memuat data...</td></tr>';
 
             try {
                 let allData = [];
                 const targetSheets = Object.keys(SHEET_GIDS); 
-
                 for (const name of targetSheets) {
                     const gid = SHEET_GIDS[name];
                     const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
-                    
                     const response = await fetch(url);
                     const text = await response.text();
                     const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
                     const parsed = JSON.parse(jsonStr);
-                    
                     const list = parseGVizTable(name, parsed);
                     allData = allData.concat(list);
                 }
@@ -668,17 +778,100 @@
 
                 if (btnRefresh) btnRefresh.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Refresh Data';
                 if (isRefresh) Swal.fire({ icon: 'success', title: 'Data Diperbarui', timer: 1000, showConfirmButton: false });
-
             } catch (error) {
-                console.error('Error fetching via GViz:', error);
-                tbody.innerHTML = '<tr><td colspan="11" class="text-center text-danger py-4">Gagal memuat data. Periksa koneksi atau izin share Google Sheet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11" class="text-center text-danger py-4">Gagal memuat data.</td></tr>';
                 if (btnRefresh) btnRefresh.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Refresh Data';
             }
         }
 
-        // ==========================================
-        // AUTO-FILL LISTENER (NIK & NAMA TEKNISI)
-        // ==========================================
+        async function renderUsersTable() {
+            const tbody = document.getElementById('tabelUsersBody');
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3">Memuat user dari Spreadsheet...</td></tr>';
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=get_users`);
+                const res = await response.json();
+                if (res.status === 'success') {
+                    globalUsersCache = res.users;
+                    tbody.innerHTML = '';
+                    let no = 1;
+
+                    Object.keys(globalUsersCache).forEach(username => {
+                        const u = globalUsersCache[username];
+                        let roleBadge = u.role === 'superadmin' ? '<span class="badge bg-danger">Super Admin</span>' :
+                                        u.role === 'superuser' ? '<span class="badge bg-primary">Superuser (Admin)</span>' :
+                                        '<span class="badge bg-secondary">User Biasa</span>';
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${no++}</td>
+                            <td><code>${username}</code></td>
+                            <td><strong>${u.kategori || '-'}</strong></td>
+                            <td>${roleBadge}</td>
+                            <td class="text-center">
+                                ${username !== 'superadmin' ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small">Proteksi Sistem</span>'}
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-3">Gagal memuat data user.</td></tr>';
+            }
+        }
+
+        function openAddUserModal() {
+            document.getElementById('formAddUser').reset();
+            new bootstrap.Modal(document.getElementById('modalAddUser')).show();
+        }
+
+        function handleSaveNewUser(e) {
+            e.preventDefault();
+            const username = document.getElementById('newUsername').value.trim().toLowerCase();
+            const password = document.getElementById('newPassword').value.trim();
+            const kategori = document.getElementById('newKategori').value;
+            const role = document.getElementById('newRole').value;
+
+            Swal.fire({ title: 'Menyimpan user...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'create_user', username, password, role, kategori })
+            })
+            .then(res => res.json())
+            .then(data => {
+                Swal.fire({ icon: data.status === 'error' ? 'error' : 'success', title: data.status === 'error' ? 'Gagal' : 'Berhasil!', text: data.message });
+                if (data.status !== 'error') {
+                    bootstrap.Modal.getInstance(document.getElementById('modalAddUser')).hide();
+                    renderUsersTable();
+                }
+            })
+            .catch(() => Swal.fire('Error', 'Gagal terhubung ke server.', 'error'));
+        }
+
+        function deleteUser(username) {
+            Swal.fire({
+                title: `Hapus user "${username}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'delete_user', username })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        Swal.fire('Terhapus!', data.message, 'success');
+                        renderUsersTable();
+                    });
+                }
+            });
+        }
+
         document.addEventListener('input', function (e) {
             if (e.target.id === 'updateNIK' || e.target.id === 'modalQuickNIK' || e.target.id === 'NIK_AWAL') {
                 const typedNik = e.target.value.trim();
@@ -689,7 +882,6 @@
                     else if (e.target.id === 'NIK_AWAL') document.getElementById('NAMA_AWAL').value = found.nama;
                 }
             }
-            
             if (e.target.id === 'updateNama' || e.target.id === 'modalQuickNama' || e.target.id === 'NAMA_AWAL') {
                 const typedNama = e.target.value.trim().toUpperCase();
                 const found = TEKNISI_MASTER_DB.find(t => t.nama.toUpperCase() === typedNama);
@@ -701,32 +893,19 @@
             }
         });
 
-        // ==========================================
-        // IMPORT CSV MASAL (BULK UPLOAD)
-        // ==========================================
         function handleCsvUpload(event) {
-            if (currentUser.role !== 'admin') return Swal.fire('Akses Ditolak', 'Hanya Admin!', 'warning');
-            
+            if (currentUser.role === 'user') return Swal.fire('Akses Ditolak', 'Hanya Admin!', 'warning');
             const file = event.target.files[0];
             if (!file) return;
-
             const targetSheet = document.getElementById('inputSheet').value;
 
-            Swal.fire({
-                title: 'Membaca file CSV...',
-                text: 'Mohon tunggu sebentar',
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
+            Swal.fire({ title: 'Membaca file CSV...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
                 const lines = text.split(/\r\n|\n/);
-                
-                if (lines.length < 2) {
-                    return Swal.fire('Error', 'File CSV kosong atau format tidak valid.', 'error');
-                }
+                if (lines.length < 2) return Swal.fire('Error', 'File CSV kosong.', 'error');
 
                 const headers = lines[0].split(',').map(h => h.trim().toUpperCase());
                 const idxBarang = headers.indexOf('BARANG');
@@ -737,23 +916,18 @@
                 const idxNik = headers.indexOf('NIK');
                 const idxNama = headers.indexOf('NAMA');
 
-                if (idxSn === -1 || idxBarang === -1) {
-                    return Swal.fire('Format Salah', 'Kolom wajib "BARANG" dan "SN" harus ada di baris pertama CSV.', 'error');
-                }
+                if (idxSn === -1 || idxBarang === -1) return Swal.fire('Format Salah', 'Kolom BARANG dan SN wajib ada.', 'error');
 
                 let itemsArray = [];
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i].trim();
                     if (!line) continue;
-                    
                     const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
                     const sn = cols[idxSn] || '';
                     const barang = cols[idxBarang] || '';
-                    
                     if (sn && barang) {
                         itemsArray.push({
-                            BARANG: barang,
-                            SN: sn,
+                            BARANG: barang, SN: sn,
                             MAC: idxMac !== -1 ? cols[idxMac] : '',
                             TYPE: idxType !== -1 ? cols[idxType] : '',
                             POSISI: idxPosisi !== -1 ? (cols[idxPosisi] || 'STOCK').toUpperCase() : 'STOCK',
@@ -763,35 +937,21 @@
                     }
                 }
 
-                if (itemsArray.length === 0) {
-                    return Swal.fire('Kosong', 'Tidak ada data valid yang terbaca dari CSV.', 'warning');
-                }
-
-                Swal.fire({ title: `Mengimport ${itemsArray.length} data ke sheet ${targetSheet}...`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
+                Swal.fire({ title: `Mengimport ${itemsArray.length} data...`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 fetch(SCRIPT_URL, {
                     method: 'POST',
-                    body: JSON.stringify({
-                        action: 'createBulk',
-                        sheetName: targetSheet,
-                        items: itemsArray
-                    })
+                    body: JSON.stringify({ action: 'createBulk', sheetName: targetSheet, items: itemsArray })
                 })
                 .then(res => res.json())
                 .then(data => {
                     Swal.fire({ icon: 'success', title: 'Import Berhasil!', text: data.message });
                     document.getElementById('csvFileInput').value = ''; 
                     loadData(); 
-                })
-                .catch(() => Swal.fire('Gagal', 'Terjadi kesalahan jaringan saat import data.', 'error'));
+                });
             };
-
             reader.readAsText(file);
         }
 
-        // ==========================================
-        // FILTER & PENCARIAN
-        // ==========================================
         function applyFilters() {
             const sheetFilter = document.getElementById('pilihanSheet').value;
             const searchQuery = document.getElementById('filterTableSearch').value.toLowerCase().trim();
@@ -808,30 +968,20 @@
                 );
                 return matchSheet && matchSearch;
             });
-
             currentPage = 1;
             renderTablePage();
         }
 
         function handleSheetFilterChange() { applyFilters(); }
         function handleSearchChange() { applyFilters(); }
+        function changePageSize(newSize) { pageSize = parseInt(newSize, 10) || 50; currentPage = 1; renderTablePage(); }
 
-        function changePageSize(newSize) {
-            pageSize = parseInt(newSize, 10) || 50;
-            currentPage = 1;
-            renderTablePage();
-        }
-
-        // ==========================================
-        // RENDER TABEL & PAGINASI
-        // ==========================================
         function renderTablePage() {
             const tbody = document.getElementById('tabelBody');
             tbody.innerHTML = '';
-
             const total = filteredData.length;
             if (total === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" class="text-center py-4 text-muted">Tidak ada data yang cocok.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11" class="text-center py-4 text-muted">Tidak ada data.</td></tr>';
                 document.getElementById('tableDataCount').innerText = 'Menampilkan: 0 data';
                 document.getElementById('paginationControls').innerHTML = '';
                 return;
@@ -849,11 +999,7 @@
 
             let no = startIndex + 1;
             pageItems.forEach(item => {
-                let badgeHtml = '';
-                if (item.posisi.includes('INTECH')) badgeHtml = `<span class="badge-intech"><i class="bi bi-person-gear me-1"></i>INTECH</span>`;
-                else if (item.posisi.includes('STOCK')) badgeHtml = `<span class="badge-stock"><i class="bi bi-check2-circle me-1"></i>STOCK</span>`;
-                else badgeHtml = `<span class="badge-installed"><i class="bi bi-tag me-1"></i>${item.posisi}</span>`;
-                
+                let badgeHtml = item.posisi.includes('INTECH') ? `<span class="badge-intech">INTECH</span>` : `<span class="badge-stock">STOCK</span>`;
                 let kategoriClass = item.sheet === 'TSEL' ? 'bg-danger' : item.sheet === 'TIF' ? 'bg-primary' : item.sheet === 'VULA' ? 'bg-dark' : 'bg-secondary';
 
                 const tr = document.createElement('tr');
@@ -876,7 +1022,6 @@
                 `;
                 tbody.appendChild(tr);
             });
-
             renderPaginationButtons(totalPages);
         }
 
@@ -887,40 +1032,31 @@
 
             const liPrev = document.createElement('li');
             liPrev.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-            liPrev.innerHTML = `<a class="page-link">&laquo; Sebelumnya</a>`;
+            liPrev.innerHTML = `<a class="page-link">&laquo;</a>`;
             liPrev.onclick = () => { if (currentPage > 1) { currentPage--; renderTablePage(); } };
             ul.appendChild(liPrev);
 
             const liInfo = document.createElement('li');
             liInfo.className = 'page-item active';
-            liInfo.innerHTML = `<a class="page-link">Hal ${currentPage} / ${totalPages}</a>`;
+            liInfo.innerHTML = `<a class="page-link">${currentPage} / ${totalPages}</a>`;
             ul.appendChild(liInfo);
 
             const liNext = document.createElement('li');
             liNext.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-            liNext.innerHTML = `<a class="page-link">Berikutnya &raquo;</a>`;
+            liNext.innerHTML = `<a class="page-link">&raquo;</a>`;
             liNext.onclick = () => { if (currentPage < totalPages) { currentPage++; renderTablePage(); } };
             ul.appendChild(liNext);
         }
 
-        // ==========================================
-        // DASHBOARD & CHARTS
-        // ==========================================
         function updateDashboardStats() {
             let totalSTB = 0, totalModem = 0, totalStock = 0, totalIntech = 0;
-            const perSheet = {
-                'TSEL': { total: 0, stb: 0, modem: 0, stock: 0, intech: 0 },
-                'TIF': { total: 0, stb: 0, modem: 0, stock: 0, intech: 0 },
-                'TELKOM': { total: 0, stb: 0, modem: 0, stock: 0, intech: 0 },
-                'VULA': { total: 0, stb: 0, modem: 0, stock: 0, intech: 0 }
-            };
+            const perSheet = { 'TSEL': {total:0,stb:0,modem:0,stock:0,intech:0}, 'TIF': {total:0,stb:0,modem:0,stock:0,intech:0}, 'TELKOM': {total:0,stb:0,modem:0,stock:0,intech:0}, 'VULA': {total:0,stb:0,modem:0,stock:0,intech:0} };
 
             allNormalizedData.forEach(item => {
                 const b = item.barang.toUpperCase();
                 const t = item.type.toUpperCase();
                 const p = item.posisi.toUpperCase();
                 const s = item.sheet.toUpperCase();
-
                 let isSTB = b.includes('STB') || t.includes('STB');
                 let isIntech = p.includes('INTECH');
                 let isStock = p.includes('STOCK');
@@ -944,14 +1080,12 @@
             Object.keys(perSheet).forEach(sheet => {
                 const prefix = sheet.toLowerCase();
                 const sData = perSheet[sheet];
-                
                 if (document.getElementById(`${prefix}Total`)) document.getElementById(`${prefix}Total`).innerHTML = `${sData.total.toLocaleString('id-ID')} <small class="text-muted fs-6">Unit</small>`;
                 if (document.getElementById(`${prefix}STB`)) document.getElementById(`${prefix}STB`).innerText = sData.stb.toLocaleString('id-ID');
                 if (document.getElementById(`${prefix}Modem`)) document.getElementById(`${prefix}Modem`).innerText = sData.modem.toLocaleString('id-ID');
                 if (document.getElementById(`${prefix}Stock`)) document.getElementById(`${prefix}Stock`).innerText = sData.stock.toLocaleString('id-ID');
                 if (document.getElementById(`${prefix}Intech`)) document.getElementById(`${prefix}Intech`).innerText = sData.intech.toLocaleString('id-ID');
             });
-
             renderCharts(totalStock, totalIntech, totalSTB, totalModem);
         }
 
@@ -960,10 +1094,7 @@
             if (chartPieInstance) chartPieInstance.destroy();
             chartPieInstance = new Chart(ctxPie, {
                 type: 'doughnut',
-                data: {
-                    labels: ['Ready Stock', 'Intech (Teknisi)'],
-                    datasets: [{ data: [stock, intech], backgroundColor: ['#198754', '#ffc107'], hoverOffset: 4 }]
-                },
+                data: { labels: ['Ready Stock', 'Intech'], datasets: [{ data: [stock, intech], backgroundColor: ['#198754', '#ffc107'] }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
 
@@ -971,13 +1102,7 @@
             if (chartBarInstance) chartBarInstance.destroy();
             chartBarInstance = new Chart(ctxBar, {
                 type: 'bar',
-                data: {
-                    labels: ['TOTAL KESELURUHAN'],
-                    datasets: [
-                        { label: 'STB', data: [stb], backgroundColor: '#0dcaf0' },
-                        { label: 'Modem / ONT', data: [modem], backgroundColor: '#6c757d' }
-                    ]
-                },
+                data: { labels: ['TOTAL'], datasets: [{ label: 'STB', data: [stb], backgroundColor: '#0dcaf0' }, { label: 'Modem', data: [modem], backgroundColor: '#6c757d' }] },
                 options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } }
             });
         }
@@ -991,10 +1116,9 @@
             document.querySelectorAll('.initial-intech-field').forEach(f => f.style.display = val === 'INTECH' ? 'block' : 'none');
         }
 
-        // TAMBAH DATA SATUAN
         document.getElementById('formNTE').addEventListener('submit', function(e) {
             e.preventDefault();
-            if (currentUser.role !== 'admin') return Swal.fire('Akses Ditolak', 'Hanya Admin!', 'warning');
+            if (currentUser.role === 'user') return Swal.fire('Akses Ditolak', 'Hanya Admin!', 'warning');
 
             const btn = document.getElementById('btnSimpan');
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...';
@@ -1004,14 +1128,12 @@
             const statAwal = document.getElementById('STATUS_AWAL').value;
 
             const dataInput = {
-                action: 'create',
-                sheetName: targetSheet,
+                action: 'create', sheetName: targetSheet,
                 "BARANG": document.getElementById('BARANG').value.trim(),
                 "SN": document.getElementById('SN').value.trim(),
                 "MAC": document.getElementById('MAC').value.trim(),
                 "TYPE": document.getElementById('TYPE').value.trim(),
-                "POSISI": statAwal,
-                "STATUS PARADISE": statAwal,
+                "POSISI": statAwal, "STATUS PARADISE": statAwal,
                 "NIK": statAwal === 'INTECH' ? document.getElementById('NIK_AWAL').value.trim() : '',
                 "NAMA": statAwal === 'INTECH' ? document.getElementById('NAMA_AWAL').value.trim() : ''
             };
@@ -1024,7 +1146,6 @@
                 toggleInitialIntechFields('STOCK');
                 loadData(); 
             })
-            .catch(() => Swal.fire('Gagal', 'Terjadi kesalahan jaringan.', 'error'))
             .finally(() => { btn.innerHTML = '<i class="bi bi-save me-1"></i> Simpan Data NTE'; btn.disabled = false; });
         });
 
@@ -1133,7 +1254,7 @@
         }
 
         function exportTableToCSV() {
-            if (filteredData.length === 0) return Swal.fire('Info', 'Tidak ada data untuk diexport.', 'info');
+            if (filteredData.length === 0) return Swal.fire('Info', 'Tidak ada data.', 'info');
             let csv = "No,Kategori,Tgl In,WH SO,Barang,SN,Type,Posisi,NIK,Nama Teknisi\n";
             filteredData.forEach((r, idx) => { csv += `"${idx+1}","${r.sheet}","${r.tglIn}","${r.whSo}","${r.barang}","${r.sn}","${r.type}","${r.posisi}","${r.nik}","${r.nama}"\n`; });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
