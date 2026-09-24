@@ -383,7 +383,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 4: MANAJEMEN USER (TERHUBUNG KE GOOGLE SHEET) -->
+            <!-- VIEW 4: MANAJEMEN USER (LENGKAP CRUD EDIT) -->
             <div id="usersView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
@@ -391,7 +391,7 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
                                     <h4 class="fw-bold text-dark mb-0"><i class="bi bi-people-fill me-2 text-primary"></i>Manajemen Akun User</h4>
-                                    <p class="text-muted small mb-0">Kelola akun login dan kategori warehouse</p>
+                                    <p class="text-muted small mb-0">Kelola akun login, edit password/kategori, dan hapus user</p>
                                 </div>
                                 <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">
                                     <i class="bi bi-person-plus me-1"></i> Tambah User Baru
@@ -421,23 +421,25 @@
         </div>
     </div>
 
-    <!-- MODAL TAMBAH USER -->
+    <!-- MODAL TAMBAH / EDIT USER -->
     <div class="modal fade" id="modalAddUser" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Tambah User Sistem</h5>
+                    <h5 class="modal-title" id="userModalTitle"><i class="bi bi-person-plus me-2"></i>Tambah User Sistem</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formAddUser" onsubmit="handleSaveNewUser(event)">
+                    <form id="formAddUser" onsubmit="handleSaveOrUpdateUser(event)">
+                        <input type="hidden" id="isEditMode" value="false">
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Username Login</label>
                             <input type="text" id="newUsername" class="form-control" placeholder="Contoh: admin_blimbing" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">Password</label>
-                            <input type="password" id="newPassword" class="form-control" placeholder="••••••••" required>
+                            <label class="form-label small fw-bold" id="labelPassword">Password</label>
+                            <input type="text" id="newPassword" class="form-control" placeholder="••••••••" required>
+                            <small class="text-muted" id="passwordHelp" style="display: none;">Kosongkan atau ketik baru jika ingin mengubah password.</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Kategori / Unit Warehouse</label>
@@ -456,7 +458,7 @@
                         </div>
                         <div class="text-end">
                             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary btn-sm">Simpan Akun</button>
+                            <button type="submit" class="btn btn-primary btn-sm" id="btnSubmitUser">Simpan Akun</button>
                         </div>
                     </form>
                 </div>
@@ -778,7 +780,8 @@
                     <td><strong>${u.kategori || '-'}</strong></td>
                     <td>${roleBadge}</td>
                     <td class="text-center">
-                        ${username !== 'superadmin' ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small">Proteksi Utama</span>'}
+                        <button class="btn btn-sm btn-outline-warning me-1" onclick="openEditUserModal('${username}')"><i class="bi bi-pencil-square"></i> Edit</button>
+                        ${username !== 'superadmin' ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small ms-1">Proteksi Utama</span>'}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -787,26 +790,68 @@
 
         function openAddUserModal() {
             document.getElementById('formAddUser').reset();
+            document.getElementById('isEditMode').value = 'false';
+            document.getElementById('userModalTitle').innerHTML = '<i class="bi bi-person-plus me-2"></i>Tambah User Sistem';
+            document.getElementById('btnSubmitUser').innerText = 'Simpan Akun';
+            document.getElementById('newUsername').removeAttribute('readonly');
+            document.getElementById('labelPassword').innerText = 'Password';
+            document.getElementById('passwordHelp').style.display = 'none';
+            document.getElementById('newPassword').required = true;
             new bootstrap.Modal(document.getElementById('modalAddUser')).show();
         }
 
-        function handleSaveNewUser(e) {
+        function openEditUserModal(username) {
+            const userData = globalUsersCache[username];
+            if (!userData) return;
+
+            document.getElementById('formAddUser').reset();
+            document.getElementById('isEditMode').value = 'true';
+            document.getElementById('userModalTitle').innerHTML = '<i class="bi bi-person-gear me-2"></i>Edit User: ' + username;
+            document.getElementById('btnSubmitUser').innerText = 'Simpan Perubahan';
+            
+            document.getElementById('newUsername').value = username;
+            document.getElementById('newUsername').setAttribute('readonly', true); // Username tidak boleh diubah kuncinya
+            document.getElementById('newPassword').value = ''; // Kosongkan agar bisa diisi jika ingin ganti password
+            document.getElementById('newPassword').required = false; 
+            document.getElementById('labelPassword').innerText = 'Password Baru (Opsional)';
+            document.getElementById('passwordHelp').style.display = 'block';
+
+            document.getElementById('newKategori').value = userData.kategori || 'WH SO Blimbing';
+            document.getElementById('newRole').value = userData.role || 'superuser';
+
+            new bootstrap.Modal(document.getElementById('modalAddUser')).show();
+        }
+
+        function handleSaveOrUpdateUser(e) {
             e.preventDefault();
+            const isEdit = document.getElementById('isEditMode').value === 'true';
             const username = document.getElementById('newUsername').value.trim().toLowerCase();
-            const password = document.getElementById('newPassword').value.trim();
+            let password = document.getElementById('newPassword').value.trim();
             const kategori = document.getElementById('newKategori').value;
             const role = document.getElementById('newRole').value;
 
-            Swal.fire({ title: 'Menyimpan user ke server...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            if (isEdit && !password) {
+                // Jika mode edit dan password kosong, gunakan password lama yang sudah ada di cache
+                password = globalUsersCache[username] ? globalUsersCache[username].password : '';
+            }
+
+            if (!password) {
+                return Swal.fire('Peringatan', 'Password wajib diisi!', 'warning');
+            }
+
+            const actionType = isEdit ? 'update_user' : 'create_user';
+            const actionText = isEdit ? 'Memperbarui user...' : 'Menyimpan user ke server...';
+
+            Swal.fire({ title: actionText, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                body: JSON.stringify({ action: 'create_user', username, password, role, kategori })
+                body: JSON.stringify({ action: actionType, username, password, role, kategori })
             })
             .then(() => {
                 globalUsersCache[username] = { password, role, kategori };
-                Swal.fire({ icon: 'success', title: 'Berhasil!', text: `User "${username}" berhasil ditambahkan.` });
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: `User "${username}" berhasil ${isEdit ? 'diperbarui' : 'ditambahkan'}.` });
                 bootstrap.Modal.getInstance(document.getElementById('modalAddUser')).hide();
                 setTimeout(() => renderUsersTable(), 2000);
             });
@@ -1190,7 +1235,7 @@
             if (newStatus === 'INTECH' && (!nik || !nama)) return Swal.fire('Peringatan', 'NIK dan Nama Teknisi wajib diisi!', 'warning');
 
             kirimUpdateStatus(quickModalSheet, quickModalSN, newStatus, nik, nama, () => {
-                bootstrap.Modal.getInstance(document.getElementById('modalQuickUpdate')).hide();
+                bootstrap.Modal.getInstance(document.getElementById('modalQuickUpdate')).show();
             });
         }
 
