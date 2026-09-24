@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts: Inter (Formal & Professional) -->
+    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -17,32 +17,55 @@
 
     <style>
         :root {
-            --primary-color: #dc3545; /* Merah Telkom Akses */
+            --primary-color: #dc3545;
             --primary-dark: #b02a37;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #2b2f33;
+            --border-color: #e2e8f0;
+            --table-hover: #f8f9fa;
         }
+
+        [data-theme="dark"] {
+            --bg-color: #121824;
+            --card-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --border-color: #334155;
+            --table-hover: #273548;
+        }
+
         body {
-            background-color: #f4f6f9;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
-            color: #2b2f33;
-            letter-spacing: -0.01em;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        .card {
+            background-color: var(--card-bg) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-color) !important;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
         .bg-primary { background-color: var(--primary-color) !important; }
         .btn-primary { background-color: var(--primary-color) !important; border-color: var(--primary-color) !important; font-weight: 500; }
         .btn-primary:hover { background-color: var(--primary-dark) !important; border-color: var(--primary-dark) !important; }
-        .text-primary { color: var(--primary-color) !important; }
         
         .navbar { background-color: #9b1c28 !important; border-bottom: 2px solid #75121c; padding: 0.75rem 1rem; }
-        .navbar-brand { font-weight: 700; letter-spacing: 0.3px; font-size: 1.1rem; }
+        .navbar-brand { font-weight: 700; letter-spacing: 0.3px; font-size: 1.1rem; color: #fff !important; }
         .nav-link { font-weight: 500; border-radius: 4px; padding: 6px 14px !important; margin: 0 3px; transition: all 0.2s; color: rgba(255,255,255,0.9) !important; font-size: 0.95rem; }
         .nav-link:hover, .nav-link.active { background-color: rgba(255, 255, 255, 0.15) !important; color: #fff !important; font-weight: 600; }
         
-        .card { border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); background: #ffffff; }
         .stat-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
         .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .stat-icon { width: 42px; height: 42px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
         
-        .table { font-size: 0.9rem; }
+        .table { font-size: 0.9rem; color: var(--text-color) !important; }
+        .table-hover tbody tr:hover { background-color: var(--table-hover) !important; color: var(--text-color); }
         .table-responsive { max-height: 540px; overflow-y: auto; }
         th { position: sticky; top: 0; background-color: #9b1c28 !important; color: white !important; z-index: 2; white-space: nowrap; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
         
@@ -54,26 +77,42 @@
         .view-section.active { display: block; }
         .quick-sn-box { background: linear-gradient(135deg, #9b1c28, #dc3545); color: white; border-radius: 8px; }
         
-        .form-control, .form-select { font-size: 0.95rem; border-color: #cbd5e1; border-radius: 6px; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15); }
-        .form-label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.3rem; }
+        .form-control, .form-select { font-size: 0.95rem; border-color: var(--border-color); background-color: var(--card-bg); color: var(--text-color); border-radius: 6px; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15); background-color: var(--card-bg); color: var(--text-color); }
+        .form-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; }
+        
+        /* Tema Gelap Khusus untuk Elemen Pendukung */
+        [data-theme="dark"] .bg-light { background-color: #111827 !important; color: #f1f5f9 !important; }
+        [data-theme="dark"] .border { border-color: #334155 !important; }
+        [data-theme="dark"] .text-muted { color: #94a3b8 !important; }
+        [data-theme="dark"] .modal-content { background-color: #1e293b; color: #f1f5f9; border: 1px solid #334155; }
+        [data-theme="dark"] .dropdown-menu { background-color: #1e293b; border: 1px solid #334155; }
+        [data-theme="dark"] .dropdown-item { color: #f1f5f9; }
+        [data-theme="dark"] .dropdown-item:hover { background-color: #334155; color: #fff; }
+        [data-theme="dark"] .dropdown-divider { border-color: #334155; }
+        [data-theme="dark"] code { color: #f87171; }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
     <!-- ==================== SCREEN LOGIN ==================== -->
     <div id="loginScreen" class="container py-5" style="display: none;">
         <div class="row justify-content-center pt-5">
             <div class="col-md-5">
+                <div class="d-flex justify-content-end mb-2">
+                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="toggleTheme()">
+                        <i id="loginThemeIcon" class="bi bi-moon-fill me-1"></i> <span id="loginThemeText">Dark Mode</span>
+                    </button>
+                </div>
                 <div class="text-center mb-4">
                     <div class="d-inline-flex p-3 bg-danger text-white rounded-2 shadow-sm mb-3">
                         <i class="bi bi-shield-lock-fill fs-2"></i>
                     </div>
-                    <h4 class="fw-bold text-dark mb-1">Portal Manajemen Logistik NTE</h4>
+                    <h4 class="fw-bold mb-1">Portal Manajemen Logistik NTE</h4>
                     <p class="text-muted small">Warehouse SO Blimbing — Telkom Akses</p>
                 </div>
 
-                <div class="card login-card shadow-sm p-4 bg-white">
+                <div class="card login-card shadow-sm p-4">
                     <h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7 text-center">Autentikasi Pengguna</h6>
                     
                     <form id="formLogin">
@@ -137,6 +176,11 @@
                         <li class="nav-item" id="navItemUsers" style="display: none;"><a class="nav-link" id="nav-users" href="#" onclick="showView('usersView')"><i class="bi bi-people me-1"></i> Manajemen User</a></li>
                     </ul>
                     <div class="d-flex align-items-center gap-2">
+                        <!-- Tombol Ganti Tema -->
+                        <button type="button" class="btn btn-sm btn-outline-light px-2.5 py-1.5" onclick="toggleTheme()" title="Ganti Mode Tampilan">
+                            <i id="navThemeIcon" class="bi bi-moon-fill"></i>
+                        </button>
+
                         <div class="dropdown">
                             <button class="btn btn-light btn-sm dropdown-toggle d-flex align-items-center gap-2 shadow-sm px-3 py-1.5" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-person-badge fs-6 text-danger"></i>
@@ -160,10 +204,10 @@
             <div id="dashboardView" class="view-section active">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
                     <div>
-                        <h4 class="fw-bold text-dark mb-1">Dashboard Logistik NTE</h4>
+                        <h4 class="fw-bold mb-1">Dashboard Logistik NTE</h4>
                         <p class="text-muted small mb-0">Rekapitulasi inventaris perangkat jaringan operasional lapangan</p>
                     </div>
-                    <button class="btn btn-white bg-white border shadow-sm btn-sm text-secondary" onclick="loadData(true)">
+                    <button class="btn btn-outline-secondary border shadow-sm btn-sm" onclick="loadData(true)">
                         <i class="bi bi-arrow-clockwise me-1"></i> Sinkronisasi Data
                     </button>
                 </div>
@@ -259,7 +303,7 @@
                     </div>
                 </div>
 
-                <div class="card p-4 shadow-sm bg-white">
+                <div class="card p-4 shadow-sm">
                     <div class="row align-items-center mb-3 g-2">
                         <div class="col-md-3">
                             <label class="form-label">Filter Kategori Sheet:</label>
@@ -336,7 +380,7 @@
                             </div>
                         </div>
 
-                        <div class="card p-4 shadow-sm mb-4 bg-white">
+                        <div class="card p-4 shadow-sm mb-4">
                             <h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7"><i class="bi bi-1-circle-fill text-danger me-2"></i>Pindai / Masukkan Serial Number (SN)</h6>
                             <form id="formCariSN" onsubmit="handleCariSN(event)">
                                 <div class="row g-2 align-items-center">
@@ -353,12 +397,12 @@
                             </form>
                         </div>
 
-                        <div id="boxDetailUpdate" class="card p-4 shadow-sm mb-4 bg-white border-top border-danger border-3" style="display: none;">
+                        <div id="boxDetailUpdate" class="card p-4 shadow-sm mb-4 border-top border-danger border-3" style="display: none;">
                             <h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7"><i class="bi bi-2-circle-fill text-danger me-2"></i>Konfirmasi Perubahan Status</h6>
                             <div class="p-3 bg-light rounded-2 border mb-4">
                                 <div class="row g-2">
                                     <div class="col-sm-6"><span class="text-muted small">Kategori Sheet:</span><h6 class="fw-bold mb-2 text-danger" id="infoKategori">-</h6></div>
-                                    <div class="col-sm-6"><span class="text-muted small">Serial Number (SN):</span><h6 class="fw-bold mb-2 text-dark" id="infoSN">-</h6></div>
+                                    <div class="col-sm-6"><span class="text-muted small">Serial Number (SN):</span><h6 class="fw-bold mb-2" id="infoSN">-</h6></div>
                                     <div class="col-sm-6"><span class="text-muted small">Barang & Tipe:</span><div class="fw-semibold" id="infoBarangType">-</div></div>
                                     <div class="col-sm-6"><span class="text-muted small">Status Posisi Saat Ini:</span><div id="infoStatusBadge">-</div></div>
                                     <div class="col-sm-12"><span class="text-muted small">Penanggung Jawab Terakhir:</span><div class="fw-semibold" id="infoPemegang">-</div></div>
@@ -371,11 +415,11 @@
                                     <div class="d-flex gap-3">
                                         <div class="form-check form-check-inline p-3 border rounded-2 w-50 m-0 bg-light" style="cursor: pointer;" onclick="document.getElementById('radioIntech').checked = true; toggleStatusFields('INTECH')">
                                             <input class="form-check-input mt-1" type="radio" name="pilihanStatus" id="radioIntech" value="INTECH" onchange="toggleStatusFields('INTECH')" checked>
-                                            <label class="form-check-label fw-bold text-dark ms-1" for="radioIntech">INTECH <span class="d-block small text-muted fw-normal">Perangkat diserahkan ke Teknisi</span></label>
+                                            <label class="form-check-label fw-bold ms-1" for="radioIntech">INTECH <span class="d-block small text-muted fw-normal">Perangkat diserahkan ke Teknisi</span></label>
                                         </div>
                                         <div class="form-check form-check-inline p-3 border rounded-2 w-50 m-0 bg-light" style="cursor: pointer;" onclick="document.getElementById('radioStock').checked = true; toggleStatusFields('STOCK')">
                                             <input class="form-check-input mt-1" type="radio" name="pilihanStatus" id="radioStock" value="STOCK" onchange="toggleStatusFields('STOCK')">
-                                            <label class="form-check-label fw-bold text-dark ms-1" for="radioStock">STOCK <span class="d-block small text-muted fw-normal">Perangkat dikembalikan ke Gudang</span></label>
+                                            <label class="form-check-label fw-bold ms-1" for="radioStock">STOCK <span class="d-block small text-muted fw-normal">Perangkat dikembalikan ke Gudang</span></label>
                                         </div>
                                     </div>
                                 </div>
@@ -384,11 +428,11 @@
                                     <h6 class="fw-bold text-dark mb-2 fs-7 text-uppercase"><i class="bi bi-person-vcard me-1"></i> Data Identitas Teknisi Penerima</h6>
                                     <div class="row g-3">
                                         <div class="col-md-5">
-                                            <label class="form-label">NIK Teknisi</label>
+                                            <label class="form-label text-dark">NIK Teknisi</label>
                                             <input type="text" id="updateNIK" class="form-control" placeholder="Nomor Induk Karyawan">
                                         </div>
                                         <div class="col-md-7">
-                                            <label class="form-label">Nama Lengkap Teknisi</label>
+                                            <label class="form-label text-dark">Nama Lengkap Teknisi</label>
                                             <input type="text" id="updateNama" class="form-control" placeholder="Nama Teknisi">
                                         </div>
                                     </div>
@@ -408,10 +452,10 @@
             <div id="usersView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
-                        <div class="card p-4 shadow-sm mb-4 bg-white border-top border-danger border-3">
+                        <div class="card p-4 shadow-sm mb-4 border-top border-danger border-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <h5 class="fw-bold text-dark mb-1"><i class="bi bi-people-fill me-2 text-danger"></i>Manajemen Hak Akses Pengguna</h5>
+                                    <h5 class="fw-bold mb-1"><i class="bi bi-people-fill me-2 text-danger"></i>Manajemen Hak Akses Pengguna</h5>
                                     <p class="text-muted small mb-0">Kelola kredensial akun, otorisasi level akses, serta wilayah kerja sistem</p>
                                 </div>
                                 <button class="btn btn-danger btn-sm" onclick="openAddUserModal()">
@@ -445,7 +489,7 @@
     <!-- MODAL TAMBAH / EDIT USER -->
     <div class="modal fade" id="modalAddUser" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
+            <div class="modal-content shadow">
                 <div class="modal-header bg-danger text-white">
                     <h6 class="modal-title fw-bold" id="userModalTitle"><i class="bi bi-person-plus me-2"></i>Tambah Akun Pengguna</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -552,7 +596,36 @@
         let chartBarInstance = null;
         let activeFoundItem = null;
 
+        // --- MANAJEMEN TEMA (DARK / LIGHT MODE) ---
+        function initTheme() {
+            const savedTheme = localStorage.getItem('nte_theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            updateThemeButtonUI(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('nte_theme', newTheme);
+            updateThemeButtonUI(newTheme);
+        }
+
+        function updateThemeButtonUI(theme) {
+            const isDark = theme === 'dark';
+            const iconClass = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+            
+            const navIcon = document.getElementById('navThemeIcon');
+            if(navIcon) navIcon.className = iconClass;
+
+            const loginIcon = document.getElementById('loginThemeIcon');
+            const loginText = document.getElementById('loginThemeText');
+            if(loginIcon) loginIcon.className = iconClass;
+            if(loginText) loginText.innerText = isDark ? 'Light Mode' : 'Dark Mode';
+        }
+
         function checkAuth() {
+            initTheme();
             const savedUser = localStorage.getItem('nte_session_user');
             if (savedUser) {
                 try {
@@ -598,9 +671,7 @@
                         globalUsersCache = { ...globalUsersCache, ...newUsersObj };
                     }
                 }
-            } catch (e) {
-                // Gunakan default lokal jika gagal
-            }
+            } catch (e) {}
         }
 
         document.getElementById('formLogin').addEventListener('submit', async function(e) {
@@ -1080,12 +1151,15 @@
         }
 
         function renderCharts(stock, intech, stb, modem) {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            const textColor = isDark ? '#f1f5f9' : '#2b2f33';
+
             const ctxPie = document.getElementById('chartStatusPie').getContext('2d');
             if (chartPieInstance) chartPieInstance.destroy();
             chartPieInstance = new Chart(ctxPie, {
                 type: 'doughnut',
                 data: { labels: ['Ready Stock', 'Intech'], datasets: [{ data: [stock, intech], backgroundColor: ['#198754', '#ffc107'] }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: textColor } } } }
             });
 
             const ctxBar = document.getElementById('chartBarBreakdown').getContext('2d');
@@ -1093,7 +1167,7 @@
             chartBarInstance = new Chart(ctxBar, {
                 type: 'bar',
                 data: { labels: ['TOTAL'], datasets: [{ label: 'STB', data: [stb], backgroundColor: '#0dcaf0' }, { label: 'Modem', data: [modem], backgroundColor: '#6c757d' }] },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } }
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: textColor } }, y: { beginAtZero: true, ticks: { color: textColor } } }, plugins: { legend: { position: 'bottom', labels: { color: textColor } } } }
             });
         }
 
