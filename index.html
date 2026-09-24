@@ -383,7 +383,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 4: MANAJEMEN USER (LOKAL) -->
+            <!-- VIEW 4: MANAJEMEN USER (TERHUBUNG KE GOOGLE SHEET) -->
             <div id="usersView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
@@ -391,8 +391,11 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
                                     <h4 class="fw-bold text-dark mb-0"><i class="bi bi-people-fill me-2 text-primary"></i>Manajemen Akun User</h4>
-                                    <p class="text-muted small mb-0">Daftar akun login sistem</p>
+                                    <p class="text-muted small mb-0">Kelola akun login dan kategori warehouse</p>
                                 </div>
+                                <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">
+                                    <i class="bi bi-person-plus me-1"></i> Tambah User Baru
+                                </button>
                             </div>
 
                             <div class="table-responsive border rounded">
@@ -403,15 +406,59 @@
                                             <th>Username</th>
                                             <th>Kategori / Warehouse</th>
                                             <th>Role Hak Akses</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabelUsersBody">
-                                        <tr><td colspan="4" class="text-center py-3">Memuat data user...</td></tr>
+                                        <tr><td colspan="5" class="text-center py-3">Memuat data user dari server...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH USER -->
+    <div class="modal fade" id="modalAddUser" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Tambah User Sistem</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAddUser" onsubmit="handleSaveNewUser(event)">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Username Login</label>
+                            <input type="text" id="newUsername" class="form-control" placeholder="Contoh: admin_blimbing" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Password</label>
+                            <input type="password" id="newPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Kategori / Unit Warehouse</label>
+                            <select id="newKategori" class="form-select" required>
+                                <option value="WH SO Blimbing">WH SO Blimbing</option>
+                                <option value="WH Pusat">WH Pusat</option>
+                                <option value="Teknisi Lapangan">Teknisi Lapangan</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Role Hak Akses</label>
+                            <select id="newRole" class="form-select" required>
+                                <option value="superuser">Superuser (Admin Gudang)</option>
+                                <option value="superadmin">Super Admin (Akses Penuh)</option>
+                            </select>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Simpan Akun</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -506,8 +553,7 @@
             { nama: "RIZKI PRASETIYO", nik: "16974797" }
         ];
 
-        // Daftar Akun Lokal (Bebas CORS & Dijamin Langsung Bisa Login)
-        const LOCAL_USERS = {
+        let globalUsersCache = {
             "superadmin": { password: "super123", role: "superadmin", kategori: "Pusat / All" },
             "blimbing": { password: "blimbing123", role: "superuser", kategori: "WH SO Blimbing" }
         };
@@ -541,13 +587,46 @@
             document.getElementById('loginPassword').value = p;
         }
 
-        document.getElementById('formLogin').addEventListener('submit', function(e) {
+        async function fetchAndCacheUsers() {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=USERS`;
+                const response = await fetch(url);
+                const text = await response.text();
+                const jsonStr = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+                const parsed = JSON.parse(jsonStr);
+                
+                if (parsed && parsed.table && parsed.table.rows) {
+                    let newUsersObj = {};
+                    parsed.table.rows.forEach(row => {
+                        const c = row.c;
+                        if (c && c[0] && c[0].v) {
+                            let uname = String(c[0].v).trim();
+                            let pwd = c[1] && c[1].v ? String(c[1].v).trim() : '';
+                            let role = c[2] && c[2].v ? String(c[2].v).trim() : 'superuser';
+                            let kat = c[3] && c[3].v ? String(c[3].v).trim() : 'WH SO Blimbing';
+                            if (uname) {
+                                newUsersObj[uname] = { password: pwd, role: role, kategori: kat };
+                            }
+                        }
+                    });
+                    if (Object.keys(newUsersObj).length > 0) {
+                        globalUsersCache = newUsersObj;
+                    }
+                }
+            } catch (e) {
+                // Gunakan default lokal jika gagal
+            }
+        }
+
+        document.getElementById('formLogin').addEventListener('submit', async function(e) {
             e.preventDefault();
             const u = document.getElementById('loginUsername').value.trim();
             const p = document.getElementById('loginPassword').value.trim();
 
-            if (LOCAL_USERS[u] && LOCAL_USERS[u].password === p) {
-                currentUser = { username: u, role: LOCAL_USERS[u].role, kategori: LOCAL_USERS[u].kategori };
+            await fetchAndCacheUsers();
+
+            if (globalUsersCache[u] && globalUsersCache[u].password === p) {
+                currentUser = { username: u, role: globalUsersCache[u].role, kategori: globalUsersCache[u].kategori };
                 localStorage.setItem('nte_session_user', JSON.stringify(currentUser));
                 Swal.fire({ icon: 'success', title: 'Login Berhasil!', timer: 1000, showConfirmButton: false });
                 initAppUI();
@@ -679,14 +758,17 @@
             }
         }
 
-        function renderUsersTable() {
+        async function renderUsersTable() {
             const tbody = document.getElementById('tabelUsersBody');
             if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data user...</td></tr>';
+
+            await fetchAndCacheUsers();
             tbody.innerHTML = '';
             let no = 1;
 
-            Object.keys(LOCAL_USERS).forEach(username => {
-                const u = LOCAL_USERS[username];
+            Object.keys(globalUsersCache).forEach(username => {
+                const u = globalUsersCache[username];
                 let roleBadge = u.role === 'superadmin' ? '<span class="badge bg-danger">Super Admin</span>' : '<span class="badge bg-primary">Superuser (Admin)</span>';
 
                 const tr = document.createElement('tr');
@@ -695,8 +777,61 @@
                     <td><code>${username}</code></td>
                     <td><strong>${u.kategori || '-'}</strong></td>
                     <td>${roleBadge}</td>
+                    <td class="text-center">
+                        ${username !== 'superadmin' ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small">Proteksi Utama</span>'}
+                    </td>
                 `;
                 tbody.appendChild(tr);
+            });
+        }
+
+        function openAddUserModal() {
+            document.getElementById('formAddUser').reset();
+            new bootstrap.Modal(document.getElementById('modalAddUser')).show();
+        }
+
+        function handleSaveNewUser(e) {
+            e.preventDefault();
+            const username = document.getElementById('newUsername').value.trim().toLowerCase();
+            const password = document.getElementById('newPassword').value.trim();
+            const kategori = document.getElementById('newKategori').value;
+            const role = document.getElementById('newRole').value;
+
+            Swal.fire({ title: 'Menyimpan user ke server...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: 'create_user', username, password, role, kategori })
+            })
+            .then(() => {
+                globalUsersCache[username] = { password, role, kategori };
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: `User "${username}" berhasil ditambahkan.` });
+                bootstrap.Modal.getInstance(document.getElementById('modalAddUser')).hide();
+                setTimeout(() => renderUsersTable(), 2000);
+            });
+        }
+
+        function deleteUser(username) {
+            Swal.fire({
+                title: `Hapus user "${username}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Menghapus dari server...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify({ action: 'delete_user', username })
+                    })
+                    .then(() => {
+                        delete globalUsersCache[username];
+                        Swal.fire('Terhapus!', 'User berhasil dihapus.', 'success');
+                        setTimeout(() => renderUsersTable(), 2000);
+                    });
+                }
             });
         }
 
