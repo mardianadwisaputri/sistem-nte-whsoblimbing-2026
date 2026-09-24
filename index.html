@@ -64,7 +64,7 @@
                             <label class="form-label text-muted small fw-bold">Username</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" id="loginUsername" class="form-control" placeholder="superadmin / blimbing" required>
+                                <input type="text" id="loginUsername" class="form-control" placeholder="admin / superuser / user" required>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -85,12 +85,16 @@
                     <div class="alert alert-light border small mb-0">
                         <p class="fw-bold mb-1"><i class="bi bi-info-circle me-1"></i> Akun Demo:</p>
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span><strong>Super Admin:</strong> <code>superadmin</code> / <code>super123</code></span>
-                            <button type="button" class="btn btn-sm btn-outline-danger py-0" onclick="quickFillLogin('superadmin', 'super123')">Pakai</button>
+                            <span><strong>Admin:</strong> <code>admin</code> / <code>admin123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-danger py-0" onclick="quickFillLogin('admin', 'admin123')">Pakai</button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span><strong>Superuser:</strong> <code>superuser</code> / <code>super123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-warning py-0" onclick="quickFillLogin('superuser', 'super123')">Pakai</button>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><strong>Admin Blimbing:</strong> <code>blimbing</code> / <code>blimbing123</code></span>
-                            <button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="quickFillLogin('blimbing', 'blimbing123')">Pakai</button>
+                            <span><strong>User Biasa:</strong> <code>user</code> / <code>user123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="quickFillLogin('user', 'user123')">Pakai</button>
                         </div>
                     </div>
                 </div>
@@ -170,10 +174,11 @@
 
             <!-- VIEW 2: DATA MASTER NTE -->
             <div id="dataView" class="view-section">
-                <div id="adminAddCard" class="card p-4 shadow-sm mb-4 bg-white">
+                <!-- Card Tambah Barang (Hanya muncul untuk Admin & Superuser) -->
+                <div id="adminAddCard" class="card p-4 shadow-sm mb-4 bg-white" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="fw-bold mb-0 text-primary"><i class="bi bi-plus-circle me-2"></i>Tambah Data Baru</h4>
-                        <span class="badge bg-primary" id="badgeAddRole">Admin Gudang</span>
+                        <h4 class="fw-bold mb-0 text-primary"><i class="bi bi-plus-circle me-2"></i>Tambah Barang Baru</h4>
+                        <span class="badge bg-warning text-dark" id="badgeAddRole">Superuser Gudang</span>
                     </div>
                     <form id="formNTE">
                         <div class="row g-3">
@@ -280,7 +285,7 @@
                                     <th>Status / Posisi</th>
                                     <th>NIK</th>
                                     <th>Nama Teknisi</th>
-                                    <th class="text-center">Aksi</th>
+                                    <th class="text-center" id="colAksiHeader" style="display: none;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelBody">
@@ -304,7 +309,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 3: UPDATE STATUS -->
+            <!-- VIEW 3: UPDATE STATUS (Bisa diakses user biasa, superuser, & admin) -->
             <div id="statusView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
@@ -383,7 +388,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 4: MANAJEMEN USER (LENGKAP CRUD EDIT) -->
+            <!-- VIEW 4: MANAJEMEN USER (Hanya khusus role 'admin') -->
             <div id="usersView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
@@ -391,7 +396,7 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
                                     <h4 class="fw-bold text-dark mb-0"><i class="bi bi-people-fill me-2 text-primary"></i>Manajemen Akun User</h4>
-                                    <p class="text-muted small mb-0">Kelola akun login, edit password/kategori, dan hapus user</p>
+                                    <p class="text-muted small mb-0">Kelola akun login (Admin, Superuser, User), edit password, dan hak akses</p>
                                 </div>
                                 <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">
                                     <i class="bi bi-person-plus me-1"></i> Tambah User Baru
@@ -434,12 +439,12 @@
                         <input type="hidden" id="isEditMode" value="false">
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Username Login</label>
-                            <input type="text" id="newUsername" class="form-control" placeholder="Contoh: admin_blimbing" required>
+                            <input type="text" id="newUsername" class="form-control" placeholder="Contoh: teknisi_lapangan" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-bold" id="labelPassword">Password</label>
                             <input type="text" id="newPassword" class="form-control" placeholder="••••••••" required>
-                            <small class="text-muted" id="passwordHelp" style="display: none;">Kosongkan atau ketik baru jika ingin mengubah password.</small>
+                            <small class="text-muted" id="passwordHelp" style="display: none;">Kosongkan jika tidak ingin mengubah password.</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Kategori / Unit Warehouse</label>
@@ -452,8 +457,9 @@
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Role Hak Akses</label>
                             <select id="newRole" class="form-select" required>
-                                <option value="superuser">Superuser (Admin Gudang)</option>
-                                <option value="superadmin">Super Admin (Akses Penuh)</option>
+                                <option value="admin">Admin (Manajemen User & Sistem)</option>
+                                <option value="superuser">Superuser (Tambah Barang Baru)</option>
+                                <option value="user">User Biasa (Update Status Intech & NIK)</option>
                             </select>
                         </div>
                         <div class="text-end">
@@ -556,8 +562,9 @@
         ];
 
         let globalUsersCache = {
-            "superadmin": { password: "super123", role: "superadmin", kategori: "Pusat / All" },
-            "blimbing": { password: "blimbing123", role: "superuser", kategori: "WH SO Blimbing" }
+            "admin": { password: "admin123", role: "admin", kategori: "Pusat / All" },
+            "superuser": { password: "super123", role: "superuser", kategori: "WH SO Blimbing" },
+            "user": { password: "user123", role: "user", kategori: "Teknisi Lapangan" }
         };
 
         let currentUser = null; 
@@ -604,7 +611,7 @@
                         if (c && c[0] && c[0].v) {
                             let uname = String(c[0].v).trim();
                             let pwd = c[1] && c[1].v ? String(c[1].v).trim() : '';
-                            let role = c[2] && c[2].v ? String(c[2].v).trim() : 'superuser';
+                            let role = c[2] && c[2].v ? String(c[2].v).trim() : 'user';
                             let kat = c[3] && c[3].v ? String(c[3].v).trim() : 'WH SO Blimbing';
                             if (uname) {
                                 newUsersObj[uname] = { password: pwd, role: role, kategori: kat };
@@ -651,21 +658,33 @@
             document.getElementById('userBadgeRole').innerText = currentUser.role.toUpperCase();
             document.getElementById('navBrandText').innerText = currentUser.kategori ? currentUser.kategori.toUpperCase() : 'WH SO BLIMBING';
             
-            if (currentUser.role === 'superadmin') {
+            // Pengaturan Tampilan Menu Berdasarkan Role (admin, superuser, user)
+            if (currentUser.role === 'admin') {
                 document.getElementById('userBadgeRole').className = 'badge bg-danger ms-1';
-                document.getElementById('navItemUsers').style.display = 'block';
-                document.getElementById('adminAddCard').style.display = 'block';
-                document.getElementById('badgeAddRole').innerText = 'Super Admin';
+                document.getElementById('navItemUsers').style.display = 'block'; // Menu Manajemen User aktif
+                document.getElementById('adminAddCard').style.display = 'block'; // Card tambah barang aktif
+                document.getElementById('badgeAddRole').innerText = 'Admin Sistem';
+            } else if (currentUser.role === 'superuser') {
+                document.getElementById('userBadgeRole').className = 'badge bg-warning text-dark ms-1';
+                document.getElementById('navItemUsers').style.display = 'none'; // Sembunyikan manajemen user
+                document.getElementById('adminAddCard').style.display = 'block'; // Bisa tambah barang baru
+                document.getElementById('badgeAddRole').innerText = 'Superuser Gudang';
             } else {
+                // Role 'user' biasa
                 document.getElementById('userBadgeRole').className = 'badge bg-primary ms-1';
-                document.getElementById('navItemUsers').style.display = 'none';
-                document.getElementById('adminAddCard').style.display = 'block';
-                document.getElementById('badgeAddRole').innerText = currentUser.kategori;
+                document.getElementById('navItemUsers').style.display = 'none'; // Sembunyikan manajemen user
+                document.getElementById('adminAddCard').style.display = 'none';  // Tidak bisa tambah barang baru
             }
 
             document.getElementById('userInfoDetail').innerText = `Kategori: ${currentUser.kategori || '-'}`;
 
-            showView('dashboardView');
+            // Langsung arahkan user biasa ke tab Update Status, sedangkan admin/superuser ke Dashboard
+            if (currentUser.role === 'user') {
+                showView('statusView');
+            } else {
+                showView('dashboardView');
+            }
+            
             loadData();
             renderUsersTable();
         }
@@ -771,7 +790,7 @@
 
             Object.keys(globalUsersCache).forEach(username => {
                 const u = globalUsersCache[username];
-                let roleBadge = u.role === 'superadmin' ? '<span class="badge bg-danger">Super Admin</span>' : '<span class="badge bg-primary">Superuser (Admin)</span>';
+                let roleBadge = u.role === 'admin' ? '<span class="badge bg-danger">Admin</span>' : u.role === 'superuser' ? '<span class="badge bg-warning text-dark">Superuser</span>' : '<span class="badge bg-primary">User Biasa</span>';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -781,7 +800,7 @@
                     <td>${roleBadge}</td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-outline-warning me-1" onclick="openEditUserModal('${username}')"><i class="bi bi-pencil-square"></i> Edit</button>
-                        ${username !== 'superadmin' ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small ms-1">Proteksi Utama</span>'}
+                        ${username !== 'admin' ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small ms-1">Proteksi Utama</span>'}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -810,14 +829,14 @@
             document.getElementById('btnSubmitUser').innerText = 'Simpan Perubahan';
             
             document.getElementById('newUsername').value = username;
-            document.getElementById('newUsername').setAttribute('readonly', true); // Username tidak boleh diubah kuncinya
-            document.getElementById('newPassword').value = ''; // Kosongkan agar bisa diisi jika ingin ganti password
+            document.getElementById('newUsername').setAttribute('readonly', true);
+            document.getElementById('newPassword').value = ''; 
             document.getElementById('newPassword').required = false; 
             document.getElementById('labelPassword').innerText = 'Password Baru (Opsional)';
             document.getElementById('passwordHelp').style.display = 'block';
 
             document.getElementById('newKategori').value = userData.kategori || 'WH SO Blimbing';
-            document.getElementById('newRole').value = userData.role || 'superuser';
+            document.getElementById('newRole').value = userData.role || 'user';
 
             new bootstrap.Modal(document.getElementById('modalAddUser')).show();
         }
@@ -831,7 +850,6 @@
             const role = document.getElementById('newRole').value;
 
             if (isEdit && !password) {
-                // Jika mode edit dan password kosong, gunakan password lama yang sudah ada di cache
                 password = globalUsersCache[username] ? globalUsersCache[username].password : '';
             }
 
@@ -1021,11 +1039,6 @@
                     <td>${badgeHtml}</td>
                     <td>${item.nik !== '-' ? `<code>${item.nik}</code>` : '-'}</td>
                     <td><strong>${item.nama}</strong></td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-outline-primary" onclick="openQuickUpdateModal('${escapeStr(item.sheet)}', '${escapeStr(item.sn)}', '${escapeStr(item.barang)}', '${item.posisi}', '${escapeStr(item.nik)}', '${escapeStr(item.nama)}')">
-                            <i class="bi bi-pencil-square"></i> Update
-                        </button>
-                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1206,37 +1219,6 @@
             if (newStatus === 'INTECH' && (!nik || !nama)) return Swal.fire('Data Belum Lengkap', 'NIK dan Nama Teknisi wajib diisi!', 'warning');
 
             kirimUpdateStatus(activeFoundItem.sheet, activeFoundItem.sn, newStatus, nik, nama, () => { batalUpdate(); });
-        }
-
-        let quickModalSN = '', quickModalSheet = '';
-        function openQuickUpdateModal(sheet, sn, barang, posisi, nik, nama) {
-            quickModalSN = sn; quickModalSheet = sheet;
-            document.getElementById('modalQuickSN').innerText = sn;
-            document.getElementById('modalQuickSheet').innerText = sheet;
-            document.getElementById('modalQuickBarang').innerText = barang;
-
-            const selectStatus = document.getElementById('modalQuickStatusSelect');
-            if (posisi.includes('INTECH')) {
-                selectStatus.value = 'STOCK'; toggleModalTeknisi('STOCK');
-            } else {
-                selectStatus.value = 'INTECH'; toggleModalTeknisi('INTECH');
-                document.getElementById('modalQuickNIK').value = nik !== '-' ? nik : '';
-                document.getElementById('modalQuickNama').value = nama !== '-' ? nama : '';
-            }
-            new bootstrap.Modal(document.getElementById('modalQuickUpdate')).show();
-        }
-
-        function toggleModalTeknisi(val) { document.getElementById('modalTeknisiFields').style.display = val === 'INTECH' ? 'block' : 'none'; }
-
-        function submitModalQuickStatus() {
-            const newStatus = document.getElementById('modalQuickStatusSelect').value;
-            const nik = document.getElementById('modalQuickNIK').value.trim();
-            const nama = document.getElementById('modalQuickNama').value.trim();
-            if (newStatus === 'INTECH' && (!nik || !nama)) return Swal.fire('Peringatan', 'NIK dan Nama Teknisi wajib diisi!', 'warning');
-
-            kirimUpdateStatus(quickModalSheet, quickModalSN, newStatus, nik, nama, () => {
-                bootstrap.Modal.getInstance(document.getElementById('modalQuickUpdate')).show();
-            });
         }
 
         function kirimUpdateStatus(sheet, sn, newStatus, nik, nama, onSuccessCallback) {
