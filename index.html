@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts: Inter (Formal & Professional) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <!-- Chart.js -->
@@ -15,86 +17,101 @@
 
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --accent-intech: #ffc107;
-            --accent-stock: #198754;
+            --primary-color: #dc3545; /* Merah Telkom Akses */
+            --primary-dark: #b02a37;
         }
         body {
-            background-color: #f1f5f9;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f4f6f9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
+            color: #2b2f33;
+            letter-spacing: -0.01em;
         }
-        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
-        .nav-link { font-weight: 500; border-radius: 6px; padding: 8px 16px !important; margin: 0 4px; transition: all 0.2s; }
-        .nav-link.active { background-color: rgba(255, 255, 255, 0.2) !important; font-weight: 600; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
-        .stat-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .table-responsive { max-height: 560px; overflow-y: auto; }
-        th { position: sticky; top: 0; background-color: #0d6efd !important; color: white !important; z-index: 2; white-space: nowrap; }
-        .badge-stock { background-color: #d1e7dd; color: #0f5132; font-weight: 600; padding: 5px 10px; border-radius: 20px; display: inline-block; }
-        .badge-intech { background-color: #fff3cd; color: #664d03; font-weight: 600; padding: 5px 10px; border-radius: 20px; display: inline-block; }
-        .login-card { max-width: 440px; margin: auto; border-radius: 16px; }
+        .bg-primary { background-color: var(--primary-color) !important; }
+        .btn-primary { background-color: var(--primary-color) !important; border-color: var(--primary-color) !important; font-weight: 500; }
+        .btn-primary:hover { background-color: var(--primary-dark) !important; border-color: var(--primary-dark) !important; }
+        .text-primary { color: var(--primary-color) !important; }
+        
+        .navbar { background-color: #9b1c28 !important; border-bottom: 2px solid #75121c; padding: 0.75rem 1rem; }
+        .navbar-brand { font-weight: 700; letter-spacing: 0.3px; font-size: 1.1rem; }
+        .nav-link { font-weight: 500; border-radius: 4px; padding: 6px 14px !important; margin: 0 3px; transition: all 0.2s; color: rgba(255,255,255,0.9) !important; font-size: 0.95rem; }
+        .nav-link:hover, .nav-link.active { background-color: rgba(255, 255, 255, 0.15) !important; color: #fff !important; font-weight: 600; }
+        
+        .card { border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); background: #ffffff; }
+        .stat-card { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .stat-icon { width: 42px; height: 42px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        
+        .table { font-size: 0.9rem; }
+        .table-responsive { max-height: 540px; overflow-y: auto; }
+        th { position: sticky; top: 0; background-color: #9b1c28 !important; color: white !important; z-index: 2; white-space: nowrap; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .badge-stock { background-color: #d1e7dd; color: #0f5132; font-weight: 600; padding: 4px 10px; border-radius: 4px; display: inline-block; font-size: 0.8rem; }
+        .badge-intech { background-color: #fff3cd; color: #664d03; font-weight: 600; padding: 4px 10px; border-radius: 4px; display: inline-block; font-size: 0.8rem; }
+        
+        .login-card { max-width: 420px; margin: auto; border-radius: 8px; border-top: 4px solid var(--primary-color); }
         .view-section { display: none; }
         .view-section.active { display: block; }
-        .quick-sn-box { background: linear-gradient(135deg, #0d6efd, #0b5ed7); color: white; border-radius: 12px; }
-        .pagination .page-link { cursor: pointer; }
+        .quick-sn-box { background: linear-gradient(135deg, #9b1c28, #dc3545); color: white; border-radius: 8px; }
+        
+        .form-control, .form-select { font-size: 0.95rem; border-color: #cbd5e1; border-radius: 6px; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15); }
+        .form-label { font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 0.3rem; }
     </style>
 </head>
 <body>
 
     <!-- ==================== SCREEN LOGIN ==================== -->
     <div id="loginScreen" class="container py-5" style="display: none;">
-        <div class="row justify-content-center pt-4">
-            <div class="col-md-6 col-lg-5">
+        <div class="row justify-content-center pt-5">
+            <div class="col-md-5">
                 <div class="text-center mb-4">
-                    <div class="d-inline-flex p-3 bg-primary text-white rounded-circle shadow-sm mb-3">
-                        <i class="bi bi-boxes fs-1"></i>
+                    <div class="d-inline-flex p-3 bg-danger text-white rounded-2 shadow-sm mb-3">
+                        <i class="bi bi-shield-lock-fill fs-2"></i>
                     </div>
-                    <h3 class="fw-bold text-dark">Sistem NTE</h3>
-                    <p class="text-muted">Warehouse SO Blimbing Management System</p>
+                    <h4 class="fw-bold text-dark mb-1">Portal Manajemen Logistik NTE</h4>
+                    <p class="text-muted small">Warehouse SO Blimbing — Telkom Akses</p>
                 </div>
 
-                <div class="card login-card shadow-lg p-4 bg-white">
-                    <h5 class="fw-bold mb-3 text-center">Masuk ke Sistem</h5>
+                <div class="card login-card shadow-sm p-4 bg-white">
+                    <h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7 text-center">Autentikasi Pengguna</h6>
                     
                     <form id="formLogin">
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Username</label>
+                            <label class="form-label">Username</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                <input type="text" id="loginUsername" class="form-control" placeholder="admin / superuser / user" required>
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                                <input type="text" id="loginUsername" class="form-control" placeholder="Masukkan username..." required>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Password</label>
+                            <label class="form-label">Password</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
                                 <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Masuk Sekarang
+                        <button type="submit" class="btn btn-danger w-100 py-2 fw-semibold">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Masuk Sistem
                         </button>
                     </form>
 
                     <hr class="my-4">
 
-                    <div class="alert alert-light border small mb-0">
-                        <p class="fw-bold mb-1"><i class="bi bi-info-circle me-1"></i> Akun Demo:</p>
+                    <div class="alert alert-light border small mb-0 py-2">
+                        <p class="fw-bold mb-2 text-danger"><i class="bi bi-info-circle me-1"></i> Akun Pengujian Cepat:</p>
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span><strong>Admin:</strong> <code>admin</code> / <code>admin123</code></span>
-                            <button type="button" class="btn btn-sm btn-outline-danger py-0" onclick="quickFillLogin('admin', 'admin123')">Pakai</button>
+                            <span>Admin: <code>admin</code> / <code>admin123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" onclick="quickFillLogin('admin', 'admin123')">Pakai</button>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span><strong>Superuser:</strong> <code>superuser</code> / <code>super123</code></span>
-                            <button type="button" class="btn btn-sm btn-outline-warning py-0" onclick="quickFillLogin('superuser', 'super123')">Pakai</button>
+                            <span>Superuser: <code>superuser</code> / <code>super123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-warning text-dark py-0 px-2" onclick="quickFillLogin('superuser', 'super123')">Pakai</button>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><strong>User Biasa:</strong> <code>user</code> / <code>user123</code></span>
-                            <button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="quickFillLogin('user', 'user123')">Pakai</button>
+                            <span>User: <code>user</code> / <code>user123</code></span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="quickFillLogin('user', 'user123')">Pakai</button>
                         </div>
                     </div>
                 </div>
@@ -104,10 +121,10 @@
 
     <!-- ==================== SCREEN UTAMA ==================== -->
     <div id="mainApp" style="display: none;">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
             <div class="container-fluid px-lg-4">
                 <a class="navbar-brand d-flex align-items-center" href="#" onclick="showView('dashboardView')">
-                    <i class="bi bi-boxes me-2 fs-4"></i><span id="navBrandText">WH SO BLIMBING</span>
+                    <i class="bi bi-building-fill-gear me-2"></i><span id="navBrandText">WH SO BLIMBING</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                     <span class="navbar-toggler-icon"></span>
@@ -121,16 +138,16 @@
                     </ul>
                     <div class="d-flex align-items-center gap-2">
                         <div class="dropdown">
-                            <button class="btn btn-light btn-sm dropdown-toggle d-flex align-items-center gap-1 shadow-sm" type="button" data-bs-toggle="dropdown">
-                                <i class="bi bi-person-circle fs-6"></i>
-                                <span id="userBadgeName">User</span>
-                                <span id="userBadgeRole" class="badge bg-primary ms-1">Role</span>
+                            <button class="btn btn-light btn-sm dropdown-toggle d-flex align-items-center gap-2 shadow-sm px-3 py-1.5" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-badge fs-6 text-danger"></i>
+                                <span id="userBadgeName" class="fw-semibold">User</span>
+                                <span id="userBadgeRole" class="badge bg-danger">Role</span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow">
-                                <li><h6 class="dropdown-header">Informasi Login</h6></li>
-                                <li><span class="dropdown-item-text small" id="userInfoDetail">Kategori: -</span></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                <li><h6 class="dropdown-header text-uppercase fs-8">Informasi Sesi</h6></li>
+                                <li><span class="dropdown-item-text small text-muted" id="userInfoDetail">Wilayah: -</span></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="#" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i> Keluar (Logout)</a></li>
+                                <li><a class="dropdown-item text-danger py-2" href="#" onclick="handleLogout()"><i class="bi bi-box-arrow-right me-2"></i> Keluar Sistem</a></li>
                             </ul>
                         </div>
                     </div>
@@ -143,47 +160,47 @@
             <div id="dashboardView" class="view-section active">
                 <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
                     <div>
-                        <h3 class="fw-bold text-dark mb-0">Dashboard Ringkasan NTE</h3>
-                        <p class="text-muted small mb-0">Data ditarik secara real-time dari Google Sheet</p>
+                        <h4 class="fw-bold text-dark mb-1">Dashboard Logistik NTE</h4>
+                        <p class="text-muted small mb-0">Rekapitulasi inventaris perangkat jaringan operasional lapangan</p>
                     </div>
-                    <button class="btn btn-white bg-white border shadow-sm btn-sm" onclick="loadData(true)">
-                        <i class="bi bi-arrow-clockwise me-1"></i> Refresh Data
+                    <button class="btn btn-white bg-white border shadow-sm btn-sm text-secondary" onclick="loadData(true)">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Sinkronisasi Data
                     </button>
                 </div>
 
                 <div class="row g-3 mb-4">
-                    <div class="col-6 col-md-4 col-xl-2"><div class="card stat-card p-3 bg-white border-start border-primary border-4"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-bold">TOTAL NTE</span><h3 class="fw-bold mb-0 text-primary" id="kpiTotalNTE">0</h3></div><div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-boxes"></i></div></div></div></div>
-                    <div class="col-6 col-md-4 col-xl-2"><div class="card stat-card p-3 bg-white border-start border-info border-4"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-bold">TOTAL STB</span><h3 class="fw-bold mb-0 text-info" id="kpiTotalSTB">0</h3></div><div class="stat-icon bg-info-subtle text-info"><i class="bi bi-tv"></i></div></div></div></div>
-                    <div class="col-6 col-md-4 col-xl-2"><div class="card stat-card p-3 bg-white border-start border-secondary border-4"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-bold">TOTAL MODEM</span><h3 class="fw-bold mb-0 text-secondary" id="kpiTotalModem">0</h3></div><div class="stat-icon bg-secondary-subtle text-secondary"><i class="bi bi-router"></i></div></div></div></div>
-                    <div class="col-6 col-md-4 col-xl-3"><div class="card stat-card p-3 bg-white border-start border-success border-4"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-bold">READY STOCK</span><h3 class="fw-bold mb-0 text-success" id="kpiTotalStock">0</h3><small class="text-muted">Di Gudang</small></div><div class="stat-icon bg-success-subtle text-success"><i class="bi bi-check-circle"></i></div></div></div></div>
-                    <div class="col-6 col-md-4 col-xl-3"><div class="card stat-card p-3 bg-white border-start border-warning border-4"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-bold">INTECH</span><h3 class="fw-bold mb-0 text-warning" id="kpiTotalIntech">0</h3><small class="text-muted">Dipegang Teknisi</small></div><div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-person-gear"></i></div></div></div></div>
+                    <div class="col-6 col-md-4 col-xl-2"><div class="card stat-card p-3 border-top border-danger border-3"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-semibold text-uppercase fs-8">TOTAL NTE</span><h3 class="fw-bold mb-0 text-danger" id="kpiTotalNTE">0</h3></div><div class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-boxes"></i></div></div></div></div>
+                    <div class="col-6 col-md-4 col-xl-2"><div class="card stat-card p-3 border-top border-info border-3"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-semibold text-uppercase fs-8">TOTAL STB</span><h3 class="fw-bold mb-0 text-info" id="kpiTotalSTB">0</h3></div><div class="stat-icon bg-info-subtle text-info"><i class="bi bi-tv"></i></div></div></div></div>
+                    <div class="col-6 col-md-4 col-xl-2"><div class="card stat-card p-3 border-top border-secondary border-3"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-semibold text-uppercase fs-8">TOTAL MODEM</span><h3 class="fw-bold mb-0 text-secondary" id="kpiTotalModem">0</h3></div><div class="stat-icon bg-secondary-subtle text-secondary"><i class="bi bi-router"></i></div></div></div></div>
+                    <div class="col-6 col-md-4 col-xl-3"><div class="card stat-card p-3 border-top border-success border-3"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-semibold text-uppercase fs-8">READY STOCK</span><h3 class="fw-bold mb-0 text-success" id="kpiTotalStock">0</h3><small class="text-muted fs-8">Di Gudang Utama</small></div><div class="stat-icon bg-success-subtle text-success"><i class="bi bi-check-circle"></i></div></div></div></div>
+                    <div class="col-6 col-md-4 col-xl-3"><div class="card stat-card p-3 border-top border-warning border-3"><div class="d-flex justify-content-between align-items-center"><div><span class="text-muted small fw-semibold text-uppercase fs-8">INTECH</span><h3 class="fw-bold mb-0 text-warning" id="kpiTotalIntech">0</h3><small class="text-muted fs-8">Pegang Teknisi</small></div><div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-person-gear"></i></div></div></div></div>
                 </div>
 
                 <div class="row g-3 mb-4">
-                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-danger fs-6 px-3 py-1">TSEL</span><span class="text-muted small">Telkomsel</span></div><h4 class="fw-bold mb-2" id="tselTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="tselSTB">0</strong></span><span>Modem: <strong id="tselModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="tselStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="tselIntech">0</strong></span></div></div></div>
-                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-primary fs-6 px-3 py-1">TIF</span><span class="text-muted small">IndiHome Fiber</span></div><h4 class="fw-bold mb-2" id="tifTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="tifSTB">0</strong></span><span>Modem: <strong id="tifModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="tifStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="tifIntech">0</strong></span></div></div></div>
-                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-secondary fs-6 px-3 py-1">TELKOM</span><span class="text-muted small">Telkom Reguler</span></div><h4 class="fw-bold mb-2" id="telkomTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="telkomSTB">0</strong></span><span>Modem: <strong id="telkomModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="telkomStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="telkomIntech">0</strong></span></div></div></div>
-                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 bg-white"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-dark fs-6 px-3 py-1">VULA</span><span class="text-muted small">Vula Partner</span></div><h4 class="fw-bold mb-2" id="vulaTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="vulaSTB">0</strong></span><span>Modem: <strong id="vulaModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success"><i class="bi bi-circle-fill small me-1"></i>Stock: <strong id="vulaStock">0</strong></span><span class="text-warning"><i class="bi bi-circle-fill small me-1"></i>Intech: <strong id="vulaIntech">0</strong></span></div></div></div>
+                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 border-top border-danger"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-danger px-2 py-1">TSEL</span><span class="text-muted small">Telkomsel</span></div><h4 class="fw-bold mb-2" id="tselTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="tselSTB">0</strong></span><span>Modem: <strong id="tselModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success">Stock: <strong id="tselStock">0</strong></span><span class="text-warning">Intech: <strong id="tselIntech">0</strong></span></div></div></div>
+                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 border-top border-primary"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-primary px-2 py-1">TIF</span><span class="text-muted small">IndiHome Fiber</span></div><h4 class="fw-bold mb-2" id="tifTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="tifSTB">0</strong></span><span>Modem: <strong id="tifModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success">Stock: <strong id="tifStock">0</strong></span><span class="text-warning">Intech: <strong id="tifIntech">0</strong></span></div></div></div>
+                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 border-top border-secondary"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-secondary px-2 py-1">TELKOM</span><span class="text-muted small">Telkom Reguler</span></div><h4 class="fw-bold mb-2" id="telkomTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="telkomSTB">0</strong></span><span>Modem: <strong id="telkomModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success">Stock: <strong id="telkomStock">0</strong></span><span class="text-warning">Intech: <strong id="telkomIntech">0</strong></span></div></div></div>
+                    <div class="col-md-6 col-xl-3"><div class="card p-3 h-100 border-top border-dark"><div class="d-flex justify-content-between align-items-center mb-2"><span class="badge bg-dark px-2 py-1">VULA</span><span class="text-muted small">Vula Partner</span></div><h4 class="fw-bold mb-2" id="vulaTotal">0 <small class="text-muted fs-6">Unit</small></h4><div class="d-flex justify-content-between small text-muted border-top pt-2"><span>STB: <strong id="vulaSTB">0</strong></span><span>Modem: <strong id="vulaModem">0</strong></span></div><div class="d-flex justify-content-between small border-top pt-2 mt-1"><span class="text-success">Stock: <strong id="vulaStock">0</strong></span><span class="text-warning">Intech: <strong id="vulaIntech">0</strong></span></div></div></div>
                 </div>
 
                 <div class="row g-4">
-                    <div class="col-lg-5"><div class="card p-4 bg-white h-100"><h5 class="fw-bold mb-3">Distribusi Posisi (Semua Data)</h5><div style="height: 280px; position: relative;"><canvas id="chartStatusPie"></canvas></div></div></div>
-                    <div class="col-lg-7"><div class="card p-4 bg-white h-100"><h5 class="fw-bold mb-3">Perbandingan STB vs Modem (Global)</h5><div style="height: 280px; position: relative;"><canvas id="chartBarBreakdown"></canvas></div></div></div>
+                    <div class="col-lg-5"><div class="card p-4 h-100"><h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7">Distribusi Posisi Perangkat</h6><div style="height: 260px; position: relative;"><canvas id="chartStatusPie"></canvas></div></div></div>
+                    <div class="col-lg-7"><div class="card p-4 h-100"><h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7">Komparasi Jenis Perangkat (STB vs Modem)</h6><div style="height: 260px; position: relative;"><canvas id="chartBarBreakdown"></canvas></div></div></div>
                 </div>
             </div>
 
             <!-- VIEW 2: DATA MASTER NTE -->
             <div id="dataView" class="view-section">
                 <!-- Card Tambah Barang (Hanya muncul untuk Admin & Superuser) -->
-                <div id="adminAddCard" class="card p-4 shadow-sm mb-4 bg-white" style="display: none;">
+                <div id="adminAddCard" class="card p-4 shadow-sm mb-4 border-top border-danger border-3" style="display: none;">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="fw-bold mb-0 text-primary"><i class="bi bi-plus-circle me-2"></i>Tambah Barang Baru</h4>
-                        <span class="badge bg-warning text-dark" id="badgeAddRole">Superuser Gudang</span>
+                        <h5 class="fw-bold mb-0 text-danger"><i class="bi bi-plus-square me-2"></i>Entri Data Barang Baru</h5>
+                        <span class="badge bg-danger" id="badgeAddRole">Superuser Gudang</span>
                     </div>
                     <form id="formNTE">
                         <div class="row g-3">
                             <div class="col-md-2">
-                                <label class="form-label small fw-bold">Kategori Sheet</label>
+                                <label class="form-label">Kategori Sheet</label>
                                 <select id="inputSheet" class="form-select" required>
                                     <option value="TSEL">TSEL</option>
                                     <option value="TIF">TIF</option>
@@ -192,51 +209,51 @@
                                 </select>
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label small fw-bold">Barang (ONT / STB)</label>
-                                <input type="text" id="BARANG" class="form-control" placeholder="Contoh: ONT ZTE F609" required>
+                                <label class="form-label">Nama Barang</label>
+                                <input type="text" id="BARANG" class="form-control" placeholder="Contoh: ONT ZTE" required>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label small fw-bold">Serial Number (SN)</label>
+                                <label class="form-label">Serial Number (SN)</label>
                                 <input type="text" id="SN" class="form-control" placeholder="Nomor Serial" required>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label small fw-bold">MAC Address</label>
+                                <label class="form-label">MAC Address</label>
                                 <input type="text" id="MAC" class="form-control" placeholder="AA:BB:CC:11:22:33">
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label small fw-bold">Type NTE</label>
+                                <label class="form-label">Type NTE</label>
                                 <input type="text" id="TYPE" class="form-control" placeholder="ZTE / HG680">
                             </div>
 
                             <div class="col-md-2">
-                                <label class="form-label small fw-bold">Status Awal</label>
+                                <label class="form-label">Status Awal</label>
                                 <select id="STATUS_AWAL" class="form-select" onchange="toggleInitialIntechFields(this.value)">
                                     <option value="STOCK">STOCK (Gudang)</option>
                                     <option value="INTECH">INTECH (Teknisi)</option>
                                 </select>
                             </div>
                             <div class="col-md-3 initial-intech-field" style="display: none;">
-                                <label class="form-label small fw-bold">NIK Teknisi</label>
-                                <input type="text" id="NIK_AWAL" class="form-control" placeholder="Contoh: 198022">
+                                <label class="form-label">NIK Teknisi</label>
+                                <input type="text" id="NIK_AWAL" class="form-control" placeholder="Nomor Induk Karyawan">
                             </div>
                             <div class="col-md-4 initial-intech-field" style="display: none;">
-                                <label class="form-label small fw-bold">Nama Teknisi</label>
+                                <label class="form-label">Nama Teknisi</label>
                                 <input type="text" id="NAMA_AWAL" class="form-control" placeholder="Nama Lengkap Teknisi">
                             </div>
                             <div class="col-md-3 d-flex align-items-end">
-                                <button type="submit" class="btn btn-primary w-100" id="btnSimpan">
-                                    <i class="bi bi-save me-1"></i> Simpan Data NTE
+                                <button type="submit" class="btn btn-danger w-100" id="btnSimpan">
+                                    <i class="bi bi-save me-1"></i> Simpan Data
                                 </button>
                             </div>
                         </div>
                     </form>
 
                     <div class="mt-4 pt-3 border-top d-flex flex-wrap justify-content-between align-items-center gap-2">
-                        <small class="text-muted"><i class="bi bi-file-earmark-arrow-up me-1"></i>Ingin input banyak data sekaligus? Upload file CSV.</small>
+                        <small class="text-muted"><i class="bi bi-file-earmark-arrow-up me-1"></i>Import masal database perangkat menggunakan file berformat .csv</small>
                         <div>
                             <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleCsvUpload(event)">
-                            <button type="button" class="btn btn-outline-success btn-sm" onclick="document.getElementById('csvFileInput').click()">
-                                <i class="bi bi-file-earmark-spreadsheet me-1"></i> Import dari File CSV
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="document.getElementById('csvFileInput').click()">
+                                <i class="bi bi-file-earmark-spreadsheet me-1"></i> Import Berkas CSV
                             </button>
                         </div>
                     </div>
@@ -245,9 +262,9 @@
                 <div class="card p-4 shadow-sm bg-white">
                     <div class="row align-items-center mb-3 g-2">
                         <div class="col-md-3">
-                            <label class="fw-bold small text-muted">Filter Kategori Sheet:</label>
+                            <label class="form-label">Filter Kategori Sheet:</label>
                             <select id="pilihanSheet" class="form-select" onchange="handleSheetFilterChange()">
-                                <option value="ALL" selected>TAMPILKAN SEMUA DATA (ALL)</option>
+                                <option value="ALL" selected>SEMUA KATEGORI (ALL)</option>
                                 <option value="TSEL">TSEL (Telkomsel)</option>
                                 <option value="TIF">TIF (IndiHome Fiber)</option>
                                 <option value="TELKOM">TELKOM (Reguler)</option>
@@ -255,18 +272,18 @@
                             </select>
                         </div>
                         <div class="col-md-5">
-                            <label class="fw-bold small text-muted">Pencarian Universal (SN/MAC/Nama/Type):</label>
+                            <label class="form-label">Pencarian Universal:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="text" id="filterTableSearch" class="form-control" placeholder="Ketik kata kunci..." onkeyup="handleSearchChange()">
+                                <input type="text" id="filterTableSearch" class="form-control" placeholder="Cari berdasarkan SN, MAC, Nama, atau Tipe..." onkeyup="handleSearchChange()">
                             </div>
                         </div>
                         <div class="col-md-4 text-md-end pt-md-4">
-                            <button class="btn btn-success btn-sm me-1" onclick="loadData(true)" id="btnRefresh">
-                                <i class="bi bi-arrow-repeat me-1"></i> Refresh Data
+                            <button class="btn btn-outline-danger btn-sm me-1" onclick="loadData(true)" id="btnRefresh">
+                                <i class="bi bi-arrow-repeat me-1"></i> Muat Ulang
                             </button>
                             <button class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV()">
-                                <i class="bi bi-download me-1"></i> Export CSV
+                                <i class="bi bi-download me-1"></i> Ekspor CSV
                             </button>
                         </div>
                     </div>
@@ -285,11 +302,10 @@
                                     <th>Status / Posisi</th>
                                     <th>NIK</th>
                                     <th>Nama Teknisi</th>
-                                    <th class="text-center" id="colAksiHeader" style="display: none;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelBody">
-                                <tr><td colspan="11" class="text-center py-4">Memuat data dari Google Sheet...</td></tr>
+                                <tr><td colspan="10" class="text-center py-4 text-muted">Memuat data dari peladen...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -309,78 +325,78 @@
                 </div>
             </div>
 
-            <!-- VIEW 3: UPDATE STATUS (Bisa diakses user biasa, superuser, & admin) -->
+            <!-- VIEW 3: UPDATE STATUS -->
             <div id="statusView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="card quick-sn-box p-4 shadow-sm mb-4">
                             <div class="d-flex align-items-center gap-3">
-                                <div class="bg-white text-primary p-3 rounded-circle shadow-sm"><i class="bi bi-arrow-left-right fs-2"></i></div>
-                                <div><h4 class="fw-bold mb-1">Form Update Status NTE</h4><p class="mb-0 opacity-75">Ubah status barang antara INTECH dan STOCK secara instan.</p></div>
+                                <div class="bg-white text-danger p-3 rounded-2 shadow-sm"><i class="bi bi-arrow-left-right fs-3"></i></div>
+                                <div><h5 class="fw-bold mb-1">Form Pembaruan Status & Mutasi</h5><p class="mb-0 opacity-75 small">Mutasi status perangkat antara unit teknisi (INTECH) dan gudang (STOCK).</p></div>
                             </div>
                         </div>
 
                         <div class="card p-4 shadow-sm mb-4 bg-white">
-                            <h5 class="fw-bold mb-3"><i class="bi bi-1-circle-fill text-primary me-2"></i>Scan / Ketik Serial Number (SN)</h5>
+                            <h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7"><i class="bi bi-1-circle-fill text-danger me-2"></i>Pindai / Masukkan Serial Number (SN)</h6>
                             <form id="formCariSN" onsubmit="handleCariSN(event)">
                                 <div class="row g-2 align-items-center">
                                     <div class="col-md-9">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
-                                            <input type="text" id="inputCariSN" class="form-control form-control-lg" placeholder="Masukkan SN..." required autofocus>
+                                            <input type="text" id="inputCariSN" class="form-control" placeholder="Masukkan Nomor Serial perangkat..." required autofocus>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <button type="submit" class="btn btn-primary btn-lg w-100" id="btnCariSN"><i class="bi bi-search"></i> Cari</button>
+                                        <button type="submit" class="btn btn-danger w-100" id="btnCariSN"><i class="bi bi-search me-1"></i> Cari Data</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
 
-                        <div id="boxDetailUpdate" class="card p-4 shadow-sm mb-4 bg-white" style="display: none;">
-                            <h5 class="fw-bold mb-3"><i class="bi bi-2-circle-fill text-primary me-2"></i>Informasi & Perubahan Status</h5>
-                            <div class="p-3 bg-light rounded-3 border mb-4">
+                        <div id="boxDetailUpdate" class="card p-4 shadow-sm mb-4 bg-white border-top border-danger border-3" style="display: none;">
+                            <h6 class="fw-bold mb-3 text-secondary text-uppercase fs-7"><i class="bi bi-2-circle-fill text-danger me-2"></i>Konfirmasi Perubahan Status</h6>
+                            <div class="p-3 bg-light rounded-2 border mb-4">
                                 <div class="row g-2">
                                     <div class="col-sm-6"><span class="text-muted small">Kategori Sheet:</span><h6 class="fw-bold mb-2 text-danger" id="infoKategori">-</h6></div>
-                                    <div class="col-sm-6"><span class="text-muted small">Serial Number (SN):</span><h6 class="fw-bold mb-2 text-primary" id="infoSN">-</h6></div>
-                                    <div class="col-sm-6"><span class="text-muted small">Barang & Type:</span><div class="fw-semibold" id="infoBarangType">-</div></div>
-                                    <div class="col-sm-6"><span class="text-muted small">Status Saat Ini:</span><div id="infoStatusBadge">-</div></div>
-                                    <div class="col-sm-12"><span class="text-muted small">Pemegang Saat Ini:</span><div class="fw-semibold" id="infoPemegang">-</div></div>
+                                    <div class="col-sm-6"><span class="text-muted small">Serial Number (SN):</span><h6 class="fw-bold mb-2 text-dark" id="infoSN">-</h6></div>
+                                    <div class="col-sm-6"><span class="text-muted small">Barang & Tipe:</span><div class="fw-semibold" id="infoBarangType">-</div></div>
+                                    <div class="col-sm-6"><span class="text-muted small">Status Posisi Saat Ini:</span><div id="infoStatusBadge">-</div></div>
+                                    <div class="col-sm-12"><span class="text-muted small">Penanggung Jawab Terakhir:</span><div class="fw-semibold" id="infoPemegang">-</div></div>
                                 </div>
                             </div>
 
                             <form id="formUpdateStatus" onsubmit="handleSimpanStatus(event)">
-                                <h6 class="fw-bold mb-3">Tentukan Status Baru:</h6>
+                                <label class="form-label">Tentukan Mutasi Status Baru:</label>
                                 <div class="mb-3">
                                     <div class="d-flex gap-3">
-                                        <div class="form-check form-check-inline p-3 border rounded-3 w-50" style="cursor: pointer;" onclick="document.getElementById('radioIntech').checked = true; toggleStatusFields('INTECH')">
-                                            <input class="form-check-input" type="radio" name="pilihanStatus" id="radioIntech" value="INTECH" onchange="toggleStatusFields('INTECH')" checked>
-                                            <label class="form-check-label fw-bold text-warning-emphasis" for="radioIntech"><i class="bi bi-person-gear me-1"></i> INTECH (Ke Teknisi)</label>
+                                        <div class="form-check form-check-inline p-3 border rounded-2 w-50 m-0 bg-light" style="cursor: pointer;" onclick="document.getElementById('radioIntech').checked = true; toggleStatusFields('INTECH')">
+                                            <input class="form-check-input mt-1" type="radio" name="pilihanStatus" id="radioIntech" value="INTECH" onchange="toggleStatusFields('INTECH')" checked>
+                                            <label class="form-check-label fw-bold text-dark ms-1" for="radioIntech">INTECH <span class="d-block small text-muted fw-normal">Perangkat diserahkan ke Teknisi</span></label>
                                         </div>
-                                        <div class="form-check form-check-inline p-3 border rounded-3 w-50" style="cursor: pointer;" onclick="document.getElementById('radioStock').checked = true; toggleStatusFields('STOCK')">
-                                            <input class="form-check-input" type="radio" name="pilihanStatus" id="radioStock" value="STOCK" onchange="toggleStatusFields('STOCK')">
-                                            <label class="form-check-label fw-bold text-success" for="radioStock"><i class="bi bi-check-circle me-1"></i> STOCK (Ke Gudang)</label>
+                                        <div class="form-check form-check-inline p-3 border rounded-2 w-50 m-0 bg-light" style="cursor: pointer;" onclick="document.getElementById('radioStock').checked = true; toggleStatusFields('STOCK')">
+                                            <input class="form-check-input mt-1" type="radio" name="pilihanStatus" id="radioStock" value="STOCK" onchange="toggleStatusFields('STOCK')">
+                                            <label class="form-check-label fw-bold text-dark ms-1" for="radioStock">STOCK <span class="d-block small text-muted fw-normal">Perangkat dikembalikan ke Gudang</span></label>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div id="fieldsTeknisi" class="p-3 bg-warning-subtle rounded-3 border border-warning mb-4">
-                                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-person-vcard me-1"></i> Data Teknisi Penerima</h6>
+                                <div id="fieldsTeknisi" class="p-3 bg-warning-subtle rounded-2 border border-warning mb-4">
+                                    <h6 class="fw-bold text-dark mb-2 fs-7 text-uppercase"><i class="bi bi-person-vcard me-1"></i> Data Identitas Teknisi Penerima</h6>
                                     <div class="row g-3">
                                         <div class="col-md-5">
-                                            <label class="form-label small fw-bold">NIK Teknisi</label>
-                                            <input type="text" id="updateNIK" class="form-control" placeholder="Contoh: 198022">
+                                            <label class="form-label">NIK Teknisi</label>
+                                            <input type="text" id="updateNIK" class="form-control" placeholder="Nomor Induk Karyawan">
                                         </div>
                                         <div class="col-md-7">
-                                            <label class="form-label small fw-bold">Nama Lengkap Teknisi</label>
+                                            <label class="form-label">Nama Lengkap Teknisi</label>
                                             <input type="text" id="updateNama" class="form-control" placeholder="Nama Teknisi">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-end gap-2">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="batalUpdate()">Batal</button>
-                                    <button type="submit" class="btn btn-primary px-4" id="btnSimpanStatus"><i class="bi bi-check-lg me-1"></i> Simpan Perubahan</button>
+                                    <button type="button" class="btn btn-outline-secondary px-3" onclick="batalUpdate()">Batal</button>
+                                    <button type="submit" class="btn btn-danger px-4" id="btnSimpanStatus"><i class="bi bi-check-lg me-1"></i> Simpan Mutasi Status</button>
                                 </div>
                             </form>
                         </div>
@@ -388,18 +404,18 @@
                 </div>
             </div>
 
-            <!-- VIEW 4: MANAJEMEN USER (Hanya khusus role 'admin') -->
+            <!-- VIEW 4: MANAJEMEN USER -->
             <div id="usersView" class="view-section">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
-                        <div class="card p-4 shadow-sm mb-4 bg-white">
+                        <div class="card p-4 shadow-sm mb-4 bg-white border-top border-danger border-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <h4 class="fw-bold text-dark mb-0"><i class="bi bi-people-fill me-2 text-primary"></i>Manajemen Akun User</h4>
-                                    <p class="text-muted small mb-0">Kelola akun login (Admin, Superuser, User), edit password, dan hak akses</p>
+                                    <h5 class="fw-bold text-dark mb-1"><i class="bi bi-people-fill me-2 text-danger"></i>Manajemen Hak Akses Pengguna</h5>
+                                    <p class="text-muted small mb-0">Kelola kredensial akun, otorisasi level akses, serta wilayah kerja sistem</p>
                                 </div>
-                                <button class="btn btn-primary btn-sm" onclick="openAddUserModal()">
-                                    <i class="bi bi-person-plus me-1"></i> Tambah User Baru
+                                <button class="btn btn-danger btn-sm" onclick="openAddUserModal()">
+                                    <i class="bi bi-person-plus me-1"></i> Tambah Akun Baru
                                 </button>
                             </div>
 
@@ -409,13 +425,13 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Username</th>
-                                            <th>Kategori / Warehouse</th>
-                                            <th>Role Hak Akses</th>
+                                            <th>Unit / Wilayah Kerja</th>
+                                            <th>Role Otorisasi</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabelUsersBody">
-                                        <tr><td colspan="5" class="text-center py-3">Memuat data user dari server...</td></tr>
+                                        <tr><td colspan="5" class="text-center py-3 text-muted">Memuat daftar pengguna...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -429,25 +445,25 @@
     <!-- MODAL TAMBAH / EDIT USER -->
     <div class="modal fade" id="modalAddUser" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="userModalTitle"><i class="bi bi-person-plus me-2"></i>Tambah User Sistem</h5>
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-danger text-white">
+                    <h6 class="modal-title fw-bold" id="userModalTitle"><i class="bi bi-person-plus me-2"></i>Tambah Akun Pengguna</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="formAddUser" onsubmit="handleSaveOrUpdateUser(event)">
                         <input type="hidden" id="isEditMode" value="false">
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">Username Login</label>
-                            <input type="text" id="newUsername" class="form-control" placeholder="Contoh: teknisi_lapangan" required>
+                            <label class="form-label">Username Login</label>
+                            <input type="text" id="newUsername" class="form-control" placeholder="contoh: teknisi_lapangan" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold" id="labelPassword">Password</label>
+                            <label class="form-label" id="labelPassword">Password</label>
                             <input type="text" id="newPassword" class="form-control" placeholder="••••••••" required>
-                            <small class="text-muted" id="passwordHelp" style="display: none;">Kosongkan jika tidak ingin mengubah password.</small>
+                            <small class="text-muted d-mt-1" id="passwordHelp" style="display: none;">Biarkan kosong jika tidak ingin mengubah sandi.</small>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">Kategori / Unit Warehouse</label>
+                            <label class="form-label">Unit / Wilayah Kerja</label>
                             <select id="newKategori" class="form-select" required>
                                 <option value="WH SO Blimbing">WH SO Blimbing</option>
                                 <option value="WH Pusat">WH Pusat</option>
@@ -455,16 +471,16 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small fw-bold">Role Hak Akses</label>
+                            <label class="form-label">Role / Level Akses</label>
                             <select id="newRole" class="form-select" required>
-                                <option value="admin">Admin (Manajemen User & Sistem)</option>
-                                <option value="superuser">Superuser (Tambah Barang Baru)</option>
-                                <option value="user">User Biasa (Update Status Intech & NIK)</option>
+                                <option value="admin">Admin (Manajemen Sistem & Akun)</option>
+                                <option value="superuser">Superuser (Entri Data Barang Baru)</option>
+                                <option value="user">User Biasa (Mutasi Intech & NIK)</option>
                             </select>
                         </div>
-                        <div class="text-end">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary btn-sm" id="btnSubmitUser">Simpan Akun</button>
+                        <div class="text-end pt-2">
+                            <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger btn-sm px-4" id="btnSubmitUser">Simpan Akun</button>
                         </div>
                     </form>
                 </div>
@@ -472,47 +488,7 @@
         </div>
     </div>
 
-    <!-- MODAL CEPAT UBAH STATUS -->
-    <div class="modal fade" id="modalQuickUpdate" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="bi bi-arrow-left-right me-2"></i>Ubah Status NTE</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="text-muted small">Serial Number (SN):</label>
-                        <h5 class="fw-bold text-primary mb-1" id="modalQuickSN">-</h5>
-                        <span class="badge bg-secondary mb-1" id="modalQuickSheet">-</span>
-                        <small class="text-muted" id="modalQuickBarang">-</small>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small">Pilih Status Baru:</label>
-                        <select id="modalQuickStatusSelect" class="form-select" onchange="toggleModalTeknisi(this.value)">
-                            <option value="INTECH">INTECH (Dipegang Teknisi)</option>
-                            <option value="STOCK">STOCK (Gudang WH SO)</option>
-                        </select>
-                    </div>
-                    <div id="modalTeknisiFields" class="p-3 bg-light border rounded mb-3">
-                        <div class="mb-2">
-                            <label class="form-label small fw-bold">NIK Teknisi:</label>
-                            <input type="text" id="modalQuickNIK" class="form-control form-control-sm" placeholder="NIK Teknisi">
-                        </div>
-                        <div>
-                            <label class="form-label small fw-bold">Nama Teknisi:</label>
-                            <input type="text" id="modalQuickNama" class="form-control form-control-sm" placeholder="Nama Teknisi">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="submitModalQuickStatus()">Simpan</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- SCRIPT UTAMA -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -619,7 +595,7 @@
                         }
                     });
                     if (Object.keys(newUsersObj).length > 0) {
-                        globalUsersCache = newUsersObj;
+                        globalUsersCache = { ...globalUsersCache, ...newUsersObj };
                     }
                 }
             } catch (e) {
@@ -637,10 +613,10 @@
             if (globalUsersCache[u] && globalUsersCache[u].password === p) {
                 currentUser = { username: u, role: globalUsersCache[u].role, kategori: globalUsersCache[u].kategori };
                 localStorage.setItem('nte_session_user', JSON.stringify(currentUser));
-                Swal.fire({ icon: 'success', title: 'Login Berhasil!', timer: 1000, showConfirmButton: false });
+                Swal.fire({ icon: 'success', title: 'Autentikasi Berhasil', timer: 800, showConfirmButton: false });
                 initAppUI();
             } else {
-                Swal.fire({ icon: 'error', title: 'Login Gagal', text: 'Username atau password salah.' });
+                Swal.fire({ icon: 'error', title: 'Akses Ditolak', text: 'Periksa kembali username atau password Anda.' });
             }
         });
 
@@ -658,27 +634,24 @@
             document.getElementById('userBadgeRole').innerText = currentUser.role.toUpperCase();
             document.getElementById('navBrandText').innerText = currentUser.kategori ? currentUser.kategori.toUpperCase() : 'WH SO BLIMBING';
             
-            // Pengaturan Tampilan Menu Berdasarkan Role (admin, superuser, user)
             if (currentUser.role === 'admin') {
-                document.getElementById('userBadgeRole').className = 'badge bg-danger ms-1';
-                document.getElementById('navItemUsers').style.display = 'block'; // Menu Manajemen User aktif
-                document.getElementById('adminAddCard').style.display = 'block'; // Card tambah barang aktif
+                document.getElementById('userBadgeRole').className = 'badge bg-dark';
+                document.getElementById('navItemUsers').style.display = 'block';
+                document.getElementById('adminAddCard').style.display = 'block';
                 document.getElementById('badgeAddRole').innerText = 'Admin Sistem';
             } else if (currentUser.role === 'superuser') {
-                document.getElementById('userBadgeRole').className = 'badge bg-warning text-dark ms-1';
-                document.getElementById('navItemUsers').style.display = 'none'; // Sembunyikan manajemen user
-                document.getElementById('adminAddCard').style.display = 'block'; // Bisa tambah barang baru
+                document.getElementById('userBadgeRole').className = 'badge bg-warning text-dark';
+                document.getElementById('navItemUsers').style.display = 'none';
+                document.getElementById('adminAddCard').style.display = 'block';
                 document.getElementById('badgeAddRole').innerText = 'Superuser Gudang';
             } else {
-                // Role 'user' biasa
-                document.getElementById('userBadgeRole').className = 'badge bg-primary ms-1';
-                document.getElementById('navItemUsers').style.display = 'none'; // Sembunyikan manajemen user
-                document.getElementById('adminAddCard').style.display = 'none';  // Tidak bisa tambah barang baru
+                document.getElementById('userBadgeRole').className = 'badge bg-secondary';
+                document.getElementById('navItemUsers').style.display = 'none';
+                document.getElementById('adminAddCard').style.display = 'none';
             }
 
-            document.getElementById('userInfoDetail').innerText = `Kategori: ${currentUser.kategori || '-'}`;
+            document.getElementById('userInfoDetail').innerText = `Wilayah: ${currentUser.kategori || '-'}`;
 
-            // Langsung arahkan user biasa ke tab Update Status, sedangkan admin/superuser ke Dashboard
             if (currentUser.role === 'user') {
                 showView('statusView');
             } else {
@@ -750,8 +723,8 @@
             const tbody = document.getElementById('tabelBody');
             const btnRefresh = document.getElementById('btnRefresh');
 
-            if(btnRefresh) btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Loading...';
-            tbody.innerHTML = '<tr><td colspan="11" class="text-center py-4"><div class="spinner-border text-primary me-2"></div> Memuat data...</td></tr>';
+            if(btnRefresh) btnRefresh.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Memuat...';
+            tbody.innerHTML = '<tr><td colspan="10" class="text-center py-4"><div class="spinner-border text-danger spinner-border-sm me-2"></div> Sinkronisasi database...</td></tr>';
 
             try {
                 let allData = [];
@@ -771,18 +744,18 @@
                 applyFilters(); 
                 updateDashboardStats();
 
-                if (btnRefresh) btnRefresh.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Refresh Data';
-                if (isRefresh) Swal.fire({ icon: 'success', title: 'Data Diperbarui', timer: 1000, showConfirmButton: false });
+                if (btnRefresh) btnRefresh.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Muat Ulang';
+                if (isRefresh) Swal.fire({ icon: 'success', title: 'Data Diperbarui', timer: 800, showConfirmButton: false });
             } catch (error) {
-                tbody.innerHTML = '<tr><td colspan="11" class="text-center text-danger py-4">Gagal memuat data.</td></tr>';
-                if (btnRefresh) btnRefresh.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Refresh Data';
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center text-danger py-4">Gagal menyinkronkan data peladen.</td></tr>';
+                if (btnRefresh) btnRefresh.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Muat Ulang';
             }
         }
 
         async function renderUsersTable() {
             const tbody = document.getElementById('tabelUsersBody');
             if (!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data user...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3"><div class="spinner-border spinner-border-sm text-danger me-2"></div>Memuat daftar akun...</td></tr>';
 
             await fetchAndCacheUsers();
             tbody.innerHTML = '';
@@ -790,7 +763,7 @@
 
             Object.keys(globalUsersCache).forEach(username => {
                 const u = globalUsersCache[username];
-                let roleBadge = u.role === 'admin' ? '<span class="badge bg-danger">Admin</span>' : u.role === 'superuser' ? '<span class="badge bg-warning text-dark">Superuser</span>' : '<span class="badge bg-primary">User Biasa</span>';
+                let roleBadge = u.role === 'admin' ? '<span class="badge bg-dark">Admin</span>' : u.role === 'superuser' ? '<span class="badge bg-warning text-dark">Superuser</span>' : '<span class="badge bg-secondary">User Biasa</span>';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -799,8 +772,8 @@
                     <td><strong>${u.kategori || '-'}</strong></td>
                     <td>${roleBadge}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-warning me-1" onclick="openEditUserModal('${username}')"><i class="bi bi-pencil-square"></i> Edit</button>
-                        ${username !== 'admin' ? `<button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small ms-1">Proteksi Utama</span>'}
+                        <button class="btn btn-sm btn-outline-warning me-1 py-0 px-2" onclick="openEditUserModal('${username}')"><i class="bi bi-pencil-square"></i> Edit</button>
+                        ${username !== 'admin' ? `<button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteUser('${username}')"><i class="bi bi-trash"></i> Hapus</button>` : '<span class="text-muted small ms-1">Proteksi Utama</span>'}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -810,7 +783,7 @@
         function openAddUserModal() {
             document.getElementById('formAddUser').reset();
             document.getElementById('isEditMode').value = 'false';
-            document.getElementById('userModalTitle').innerHTML = '<i class="bi bi-person-plus me-2"></i>Tambah User Sistem';
+            document.getElementById('userModalTitle').innerHTML = '<i class="bi bi-person-plus me-2"></i>Tambah Akun Pengguna';
             document.getElementById('btnSubmitUser').innerText = 'Simpan Akun';
             document.getElementById('newUsername').removeAttribute('readonly');
             document.getElementById('labelPassword').innerText = 'Password';
@@ -825,7 +798,7 @@
 
             document.getElementById('formAddUser').reset();
             document.getElementById('isEditMode').value = 'true';
-            document.getElementById('userModalTitle').innerHTML = '<i class="bi bi-person-gear me-2"></i>Edit User: ' + username;
+            document.getElementById('userModalTitle').innerHTML = '<i class="bi bi-person-gear me-2"></i>Edit Akun: ' + username;
             document.getElementById('btnSubmitUser').innerText = 'Simpan Perubahan';
             
             document.getElementById('newUsername').value = username;
@@ -854,13 +827,11 @@
             }
 
             if (!password) {
-                return Swal.fire('Peringatan', 'Password wajib diisi!', 'warning');
+                return Swal.fire('Peringatan', 'Kata sandi wajib diisi!', 'warning');
             }
 
             const actionType = isEdit ? 'update_user' : 'create_user';
-            const actionText = isEdit ? 'Memperbarui user...' : 'Menyimpan user ke server...';
-
-            Swal.fire({ title: actionText, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'Menyimpan perubahan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -869,7 +840,7 @@
             })
             .then(() => {
                 globalUsersCache[username] = { password, role, kategori };
-                Swal.fire({ icon: 'success', title: 'Berhasil!', text: `User "${username}" berhasil ${isEdit ? 'diperbarui' : 'ditambahkan'}.` });
+                Swal.fire({ icon: 'success', title: 'Berhasil', text: `Akun "${username}" berhasil disimpan.` });
                 bootstrap.Modal.getInstance(document.getElementById('modalAddUser')).hide();
                 setTimeout(() => renderUsersTable(), 2000);
             });
@@ -877,13 +848,14 @@
 
         function deleteUser(username) {
             Swal.fire({
-                title: `Hapus user "${username}"?`,
+                title: `Hapus akun "${username}"?`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, Hapus'
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({ title: 'Menghapus dari server...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    Swal.fire({ title: 'Menghapus...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                     fetch(SCRIPT_URL, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -891,7 +863,7 @@
                     })
                     .then(() => {
                         delete globalUsersCache[username];
-                        Swal.fire('Terhapus!', 'User berhasil dihapus.', 'success');
+                        Swal.fire('Terhapus', 'Akun berhasil dihapus.', 'success');
                         setTimeout(() => renderUsersTable(), 2000);
                     });
                 }
@@ -899,21 +871,19 @@
         }
 
         document.addEventListener('input', function (e) {
-            if (e.target.id === 'updateNIK' || e.target.id === 'modalQuickNIK' || e.target.id === 'NIK_AWAL') {
+            if (e.target.id === 'updateNIK' || e.target.id === 'NIK_AWAL') {
                 const typedNik = e.target.value.trim();
                 const found = TEKNISI_MASTER_DB.find(t => t.nik.toLowerCase() === typedNik.toLowerCase());
                 if (found) {
                     if (e.target.id === 'updateNIK') document.getElementById('updateNama').value = found.nama;
-                    else if (e.target.id === 'modalQuickNIK') document.getElementById('modalQuickNama').value = found.nama;
                     else if (e.target.id === 'NIK_AWAL') document.getElementById('NAMA_AWAL').value = found.nama;
                 }
             }
-            if (e.target.id === 'updateNama' || e.target.id === 'modalQuickNama' || e.target.id === 'NAMA_AWAL') {
+            if (e.target.id === 'updateNama' || e.target.id === 'NAMA_AWAL') {
                 const typedNama = e.target.value.trim().toUpperCase();
                 const found = TEKNISI_MASTER_DB.find(t => t.nama.toUpperCase() === typedNama);
                 if (found) {
                     if (e.target.id === 'updateNama') document.getElementById('updateNIK').value = found.nik;
-                    else if (e.target.id === 'modalQuickNama') document.getElementById('modalQuickNIK').value = found.nik;
                     else if (e.target.id === 'NAMA_AWAL') document.getElementById('NIK_AWAL').value = found.nik;
                 }
             }
@@ -924,13 +894,13 @@
             if (!file) return;
             const targetSheet = document.getElementById('inputSheet').value;
 
-            Swal.fire({ title: 'Membaca file CSV...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'Membaca berkas CSV...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
                 const lines = text.split(/\r\n|\n/);
-                if (lines.length < 2) return Swal.fire('Error', 'File CSV kosong.', 'error');
+                if (lines.length < 2) return Swal.fire('Error', 'Dokumen CSV kosong.', 'error');
 
                 const headers = lines[0].split(',').map(h => h.trim().toUpperCase());
                 const idxBarang = headers.indexOf('BARANG');
@@ -962,14 +932,14 @@
                     }
                 }
 
-                Swal.fire({ title: `Mengimport ${itemsArray.length} data...`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                Swal.fire({ title: `Mengimport ${itemsArray.length} perangkat...`, allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify({ action: 'createBulk', sheetName: targetSheet, items: itemsArray })
                 })
                 .then(() => {
-                    Swal.fire({ icon: 'success', title: 'Import Selesai!', text: 'Data berhasil dikirim ke server.' });
+                    Swal.fire({ icon: 'success', title: 'Import Selesai', text: 'Data berhasil dimasukkan ke sistem.' });
                     document.getElementById('csvFileInput').value = ''; 
                     setTimeout(() => loadData(), 2000); 
                 });
@@ -1006,7 +976,7 @@
             tbody.innerHTML = '';
             const total = filteredData.length;
             if (total === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" class="text-center py-4 text-muted">Tidak ada data.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center py-4 text-muted">Tidak ada data ditemukan.</td></tr>';
                 document.getElementById('tableDataCount').innerText = 'Menampilkan: 0 data';
                 document.getElementById('paginationControls').innerHTML = '';
                 return;
@@ -1034,7 +1004,7 @@
                     <td>${item.tglIn}</td>
                     <td><small class="text-muted">${item.whSo}</small></td>
                     <td><strong class="text-dark">${item.barang}</strong></td>
-                    <td><code class="text-primary fw-bold">${item.sn}</code></td>
+                    <td><code class="text-danger fw-bold">${item.sn}</code></td>
                     <td><span class="badge bg-light text-dark border">${item.type}</span></td>
                     <td>${badgeHtml}</td>
                     <td>${item.nik !== '-' ? `<code>${item.nik}</code>` : '-'}</td>
@@ -1157,12 +1127,12 @@
                 body: JSON.stringify(dataInput)
             })
             .then(() => {
-                Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Data NTE berhasil disimpan.' });
+                Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Data NTE berhasil dimasukkan.' });
                 document.getElementById('formNTE').reset();
                 toggleInitialIntechFields('STOCK');
                 setTimeout(() => loadData(), 2000); 
             })
-            .finally(() => { btn.innerHTML = '<i class="bi bi-save me-1"></i> Simpan Data NTE'; btn.disabled = false; });
+            .finally(() => { btn.innerHTML = '<i class="bi bi-save me-1"></i> Simpan Data'; btn.disabled = false; });
         });
 
         function handleCariSN(e) {
@@ -1173,7 +1143,7 @@
 
             btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>'; btn.disabled = true;
             const found = allNormalizedData.find(i => i.sn.toUpperCase() === sn.toUpperCase());
-            btn.innerHTML = '<i class="bi bi-search"></i> Cari'; btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-search me-1"></i> Cari Data'; btn.disabled = false;
 
             if (found) {
                 activeFoundItem = found;
@@ -1181,7 +1151,7 @@
                 document.getElementById('infoKategori').innerText = found.sheet;
                 document.getElementById('infoSN').innerText = found.sn;
                 document.getElementById('infoBarangType').innerText = `${found.barang} (${found.type})`;
-                document.getElementById('infoPemegang').innerText = (found.nik !== '-' || found.nama !== '-') ? `${found.nama} (${found.nik})` : 'Di Gudang WH';
+                document.getElementById('infoPemegang').innerText = (found.nik !== '-' || found.nama !== '-') ? `${found.nama} (${found.nik})` : 'Di Gudang Utama WH';
 
                 if (found.posisi.includes('INTECH')) {
                     document.getElementById('infoStatusBadge').innerHTML = `<span class="badge-intech">INTECH</span>`;
@@ -1194,7 +1164,7 @@
                 }
                 document.getElementById('boxDetailUpdate').scrollIntoView({ behavior: 'smooth' });
             } else {
-                Swal.fire('Tidak Ditemukan', `Serial Number "${sn}" tidak ditemukan.`, 'warning');
+                Swal.fire('Tidak Ditemukan', `Serial Number "${sn}" tidak terdaftar di sistem.`, 'warning');
             }
         }
 
@@ -1222,30 +1192,28 @@
         }
 
         function kirimUpdateStatus(sheet, sn, newStatus, nik, nama, onSuccessCallback) {
-            Swal.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'Memproses Mutasi...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify({ action: 'update_status', sheetName: sheet, sn: sn, status: newStatus, nik: newStatus === 'STOCK' ? '' : nik, nama: newStatus === 'STOCK' ? '' : nama })
             })
             .then(() => {
-                Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Status berhasil diperbarui.' });
+                Swal.fire({ icon: 'success', title: 'Mutasi Berhasil', text: 'Status perangkat berhasil diperbarui.' });
                 if (onSuccessCallback) onSuccessCallback();
                 setTimeout(() => loadData(), 2000); 
             })
-            .catch(() => Swal.fire('Error', 'Gagal menghubungkan ke server.', 'error'));
+            .catch(() => Swal.fire('Error', 'Gagal menghubungkan ke peladen.', 'error'));
         }
 
         function exportTableToCSV() {
-            if (filteredData.length === 0) return Swal.fire('Info', 'Tidak ada data.', 'info');
+            if (filteredData.length === 0) return Swal.fire('Informasi', 'Tidak ada data untuk diekspor.', 'info');
             let csv = "No,Kategori,Tgl In,WH SO,Barang,SN,Type,Posisi,NIK,Nama Teknisi\n";
             filteredData.forEach((r, idx) => { csv += `"${idx+1}","${r.sheet}","${r.tglIn}","${r.whSo}","${r.barang}","${r.sn}","${r.type}","${r.posisi}","${r.nik}","${r.nama}"\n`; });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-            a.download = `NTE_Export_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`; a.click();
+            a.download = `NTE_Report_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`; a.click();
         }
-
-        function escapeStr(str) { return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
         window.addEventListener('DOMContentLoaded', () => { checkAuth(); });
     </script>
